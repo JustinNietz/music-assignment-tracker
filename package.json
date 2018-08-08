@@ -1,0 +1,22 @@
+{
+  "name": "music-assignment-tracker",
+  "version": "1.0.0",
+  "description": "A form to track assignments that are due",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustinNietz/music-assignment-tracker.git"
+  },
+  "author": "Justin Nietzer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JustinNietz/music-assignment-tracker/issues"
+  },
+  "homepage": "https://github.com/JustinNietz/music-assignment-tracker#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
