@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: A53Nwms6iUE6GQeoKSM7LY4V1pMVM0g+xd7yI7/E1Ctykw6AO7DQNugqyzGUyQv/Gg/+tRw5UpsTdfMk/seDk9UdCLezaaIg5OMnGmu4DzjmA6VUN2MKW+F4/8MSpEoncxqAewtx6NoeIrEtvUtWPCFaPZ5tXDcNh0J5RZPRdP3VNPxiRT/0pJv4FWG7x3ceQxy7MCQ9+D/5VosEQvQzC7UNpkTcnFVYQWXwQvRs/C3BNxykCio/7SDf3b4VXN8AFpVHzYS1CL8PJVwtRVXUDuxuRgDta4AeSB6oRXLqre+op6vs5k4eGTJFTIKpLz7inOh/w/PeOtiPvSRuB1ji5HK+osd5WS83AEFoEKaJDrshAlFgrds3QaMeI5YY4HJnY5phhgku5RP+KQtXp2nTkzCPGuEE8GW3irtZHiAEm5KagcprlSbtjnWWnD8SjWJ3IRDyU6szeQIjyx2Aa82D9b8pou8uYSzRX/mXM//6k8LX9CXO9QPwqAUt7VPy76QMLscMYCQlmqI7Kz5FumZ4IyAiCJ97nXHVlPmYK4IBjWUvDGNeQ16lwS+p2fLpVYHpGEZQFMEN4p+It/yBXDH0Nycm/c+3RytCDFwHNFl+tplTT3ZcbicT6AOEFgeNFNkFmrMP8NpPRadE9XKrf6JzAnmvKEHbg0hOD4xAn5wkOz8=
+  app: evening-bayou-24439
+  on:
+    repo: JustinNietz/music-assignment-tracker
