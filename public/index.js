@@ -7,7 +7,7 @@ $(function(){
             url: '/api/users',
             data: JSON.stringify({
                 username: $("#username").val(),
-             password: $("#password").val(),
+                password: $("#password").val(),
                 firstName: $("#firstName").val(),
                 lastName: $("#lastName").val()
              }),
@@ -22,8 +22,8 @@ $(function(){
         window.location.href="login.html";
     }
     function error(err){
-        console.log(`${err.responseJSON.location} ${err.responseJSON.message}`);
-
+        $('.error-js').html(`${err.responseJSON.location} ${err.responseJSON.message}`);
+        console.log(`${err.responseJSON.location} ${err.responseJSON.message}`)
     }
   });
 
@@ -54,12 +54,13 @@ $(function(){
             success: function work(success){
                 console.log(success);
                 loadDashboard();
-            },
-            error: error,
+            }
+        
         })   
     }
     function error(err){
-        $('.error-js');
+       // $('.error-js').html(`${err.responseJSON.location} ${err.responseJSON.message}`);
+        console.log(err)
     }   
 })
 
