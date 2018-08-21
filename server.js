@@ -21,6 +21,8 @@ const { PORT, DATABASE_URL } = require('./config');
 
 const app = express();
 
+app.use(express.static("public"));
+
 // Logging
 app.use(morgan('common'));
 
@@ -42,6 +44,10 @@ app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+  });
 
 // A protected endpoint which needs a valid JWT to access it
 app.get('/api/protected', jwtAuth, (req, res) => {
