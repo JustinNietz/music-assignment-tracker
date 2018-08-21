@@ -64,7 +64,7 @@ app.use('*', (req, res) => {
 // assumes runServer has run and set `server` to a server object
 let server;
 
-function runServer() {
+function runServer(databaseUrl, port = PORT) {
   return new Promise((resolve, reject) => {
     mongoose.connect(DATABASE_URL, { useNewUrlParser: true }, err => {
       if (err) {
@@ -98,7 +98,7 @@ function closeServer() {
 }
 
 if (require.main === module) {
-  runServer().catch(err => console.error(err));
+  runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
 module.exports = { app, runServer, closeServer };
