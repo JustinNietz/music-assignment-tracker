@@ -12,7 +12,7 @@ const jsonParser = bodyParser.json();
 
 //1. ensure username and password are defined
 router.post('/', jsonParser, (req, res) => {
-  const requiredFields = ['username', 'password'];
+  const requiredFields = ['username', 'password', 'isAdmin'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if (missingField) {
@@ -23,12 +23,13 @@ router.post('/', jsonParser, (req, res) => {
       location: missingField
     });
   }
+
 // check that all fields are strings
   const stringFields = ['username', 'password', 'firstName', 'lastName'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
   );
-
+ 
   if (nonStringField) {
     return res.status(422).json({
       code: 422,
@@ -37,6 +38,9 @@ router.post('/', jsonParser, (req, res) => {
       location: nonStringField
     });
   }
+
+
+
 
   // If the username and password aren't trimmed we give an error.  Users might
   // expect that these will work without trimming (i.e. they want the password
@@ -95,12 +99,12 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  let {username, password, firstName = '', lastName = ''} = req.body;
+  let {username, password, firstName = '', lastName = '', isAdmin = false} = req.body;
   // Username and password come in pre-trimmed, otherwise we throw an error
   // before this
   firstName = firstName.trim();
   lastName = lastName.trim();
-
+  isAdmin = isAdmin.trim();
   return User.find({username})
     .count()
     .then(count => {
@@ -121,7 +125,8 @@ router.post('/', jsonParser, (req, res) => {
         username,
         password: hash,
         firstName,
-        lastName
+        lastName,
+        isAdmin
       });
     })
     .then(user => {

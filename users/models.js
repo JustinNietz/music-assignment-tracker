@@ -15,14 +15,18 @@ const UserSchema = mongoose.Schema({
     required: true
   },
   firstName: {type: String, default: ''},
-  lastName: {type: String, default: ''}
+  lastName: {type: String, default: ''},
+  isAdmin: {type: Boolean, default: false},
+  Assignments: {type: Array, default: ''},
+  Grades: {type: Array, default: ''}
 });
 
 UserSchema.methods.serialize = function() {
   return {
     username: this.username || '',
     firstName: this.firstName || '',
-    lastName: this.lastName || ''
+    lastName: this.lastName || '',
+    isAdmin: this.isAdmin
   };
 };
 

@@ -45,18 +45,16 @@ describe('Auth endpoints', function () {
   });
 
   describe('/api/auth/login', function () {
-    it('Should reject requests with no credentials', function () {
+    it.only('Should reject requests with no credentials', function () {
       return chai
         .request(app)
         .post('/api/auth/login')
-        .then(() =>
-          expect.fail(null, null, 'Request should not succeed')
-        )
+       
         .catch(err => {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
+          expect.fail(null, null, 'Request should not succeed')
           const res = err.response;
           expect(res).to.have.status(400);
         });
