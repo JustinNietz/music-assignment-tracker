@@ -39,9 +39,6 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-
-
-
   // If the username and password aren't trimmed we give an error.  Users might
   // expect that these will work without trimming (i.e. they want the password
   // "foobar ", including the space at the end).  We need to reject such values
@@ -91,9 +88,9 @@ router.post('/', jsonParser, (req, res) => {
       code: 422,
       reason: 'ValidationError',
       message: tooSmallField
-        ? `Must be at least ${sizedFields[tooSmallField]
+        ? `must be at least ${sizedFields[tooSmallField]
           .min} characters long`
-        : `Must be at most ${sizedFields[tooLargeField]
+        : `must be at most ${sizedFields[tooLargeField]
           .max} characters long`,
       location: tooSmallField || tooLargeField
     });
@@ -105,6 +102,7 @@ router.post('/', jsonParser, (req, res) => {
   firstName = firstName.trim();
   lastName = lastName.trim();
   isAdmin = isAdmin.trim();
+ 
   return User.find({username})
     .count()
     .then(count => {
@@ -113,7 +111,7 @@ router.post('/', jsonParser, (req, res) => {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
-          message: 'Username already taken',
+          message: 'already taken',
           location: 'username'
         });
       }
@@ -126,7 +124,7 @@ router.post('/', jsonParser, (req, res) => {
         password: hash,
         firstName,
         lastName,
-        isAdmin
+        isAdmin,
       });
     })
     .then(user => {
@@ -140,16 +138,112 @@ router.post('/', jsonParser, (req, res) => {
       }
       res.status(500).json({code: 500, message: 'Internal server error'});
     });
+    
 });
+
+router.post('/:id', jsonParser, (req, res) => {
+  const id = req.body.id;
+  
+  User
+  .findById(id)
+  .then(user => {
+    const assignment = {}; 
+    assignment.assignmentName = req.body.assignmentName;
+    console.log(user);
+    user.Assignments.push(assignment);
+    console.log(user);
+    User
+    .findByIdAndUpdate(id, user, {new: true})
+    .then(updatedUser => {
+      res.status(204).end()
+    })
+    
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({ error: 'something went horribly awry' });
+  });
+   
+});
+
+router.get('/', (req, res) => {
+  return User
+    .find()
+    .then(users => res.json(users.map(user => user.serialize())))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'something went horribly awry' });
+    });
+    
+});
+
+router.get('/:id', (req, res) => {
+  return User
+    .findById(req.params.id)
+    .then(user => res.json(user.serialize()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'something went horribly awry' });
+    });
+    
+});
+
+router.put('/:id', jsonParser, (req, res) => {
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and request body id values must match'
+    });
+  }
+
+  const updated = {};
+  const updateableFields = ['Assignments'];
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+
+  User
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+    .then(updatedPost => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Something went wrong' }));
+});
+
+router.put('/', jsonParser, (req, res) => {
+  if (!(req.params.Assignments  === req.body.Assigments)) {
+    res.status(400).json({
+      error: 'Must change all'
+    });
+  }
+
+  const updated = {};
+  const updateableFields = ['Assignments'];
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+
+  User
+    .updateMany(req.params.Assignments, { $set: updated }, { new: true })
+    .then(updatedPost => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Something went wrong' })); 
+
+}); 
+
+router.delete("/", jsonParser, (req, res) => {
+
+});
+
 
 // Never expose all your users like below in a prod application
 // we're just doing this so we have a quick way to see
 // if we're creating users. keep in mind, you can also
 // verify this in the Mongo shell.
-router.get('/', (req, res) => {
+/* router.get('/', (req, res) => {
   return User.find()
     .then(users => res.json(users.map(user => user.serialize())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+});  */
 
 module.exports = {router};

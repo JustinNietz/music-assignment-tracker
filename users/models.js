@@ -17,17 +17,19 @@ const UserSchema = mongoose.Schema({
   firstName: {type: String, default: ''},
   lastName: {type: String, default: ''},
   isAdmin: {type: Boolean, default: false},
-  Assignments: {type: Array, default: ''},
+  Assignments: {type: Array, default: []},
   Grades: {type: Array, default: ''}
 });
 
 UserSchema.methods.serialize = function() {
   return {
+    id: this._id,
     username: this.username || '',
     firstName: this.firstName || '',
     lastName: this.lastName || '',
-    isAdmin: this.isAdmin
-  };
+    isAdmin: this.isAdmin,
+    Assignments: this.Assignments || []
+    };
 };
 
 UserSchema.methods.validatePassword = function(password) {

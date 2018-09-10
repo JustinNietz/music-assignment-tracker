@@ -6,16 +6,42 @@
         <meta name="description" content="A forum to get assignments and see your current grades">
         <meta name="author" content="Justin Nietzer">
         <title>Assignment Tracker</title>
+        <!--Google Font-->
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        <!--CSS float.css-->
+        <link href="float.css" rel="stylesheet" type="text/css" />
+        <!--CSS index.css-->
+        <link href="index.css" rel="stylesheet" type="text/css" />
+        <!--Font Awesome-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
 
-<body>
-        <h1>Assignment Tracker</h1>
-
-        <a href="sign-up.html"><button>Sign up</button></a>
-        <a href="login.html"><button>Login</button></a>
+    <body>
+        <!--Title page-->
+        <header role="banner" class="indexTitlePicture">
+            <div class="row">
+                <div class="col-12 indexCenterTitle">
+                    <h1>Assignment Tracker</h1>
+                    <p><i>An easy way to keep track of homework</i></p>
+                </div>
+            </div>
+        </header>
+        <!--Sign up or Login buttons-->
+        <main role="main">
+            <div class="row container">
+                <div class="col-6 indexButton">
+                    <button type="submit" class="myButton" onClick="sendSignUp()">Sign up</button>
+                </div>
+                <div class="col-6 indexButton">
+                    <button type="submit" class="myButton" onClick="sendLogin()">Login</button>
+                </div>
+            </div>
+        </main>
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <!--JS index.js-->
+    <script type="text/javascript" src="index.js"></script>
 </body>
-
-
 
 
 </html>
