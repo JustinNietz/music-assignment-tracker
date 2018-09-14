@@ -1,13 +1,17 @@
 'use strict';
 
-function sendSignUp() {
+//Reloads page to the sign-up screen
+const sendSignUp = () => {
     window.location.href = "sign-up.html";
 }
 
-function sendLogin() {
+//Reloads page to the login screen
+const sendLogin = () => {
     window.location.href = "login.html";
 }
-function navDropDown() {
+
+//Mobile responsive navigation bar
+const navDropDown = () => {
     let x = document.getElementById("myTopnav");
     if (x.className === "topnav") {
         x.className += " responsive";
@@ -16,10 +20,63 @@ function navDropDown() {
     }
 }
 
+//Adds an item to a specific user's dashboard
+const handleAddItem = () => {
+    //First, GET the id of a user inputted
+    $.ajax({
+        type: "GET",
+        url: '/api/users',
+        success: function studentUsers(listUsers){
+            for (let i = 0; i < listUsers.length; i++) {
+            
+                if (listUsers[i].username === $("#username").val() && listUsers[i].isAdmin === false){
+                // Then, POST an assignment of a specific user by id
+                $.ajax({
+                    type: "POST",
+                    url: '/api/users/' + listUsers[i].id,
+                    data: JSON.stringify({
+                        id: listUsers[i].id,
+                            assignmentName: $("#js-assignment-name").val(),
+                            assignmentDate: $("#js-assignment-date").val()
+                     
+                    }),
+                    success: function createList(list){
+                        console.log(listUsers[i].Assignments);
+                        for(let j = 0; j < listUsers[i].Assignments.length; j++){
+                            $('.showAssignment').append(`
+                            <li>
+                            <span>Username: ${listUsers[i].username} Assignment: ${listUsers[i].Assignments[j].assignmentName} Date: ${listUsers[i].Assignments[j].assignmentDate}</span>
+                            <button class="assignment-item-update">
+                            <span class="button-label">update</span>
+                            </button>
+                            <button class="assignment-item-delete">
+                            <span class="button-label">delete</span>
+                            </button><br></li>`);
+                     
+                        }
+                       
+                    
+                    },
+                    contentType: 'application/json'
+                })
+        }
+    }
+}
+    })
 
-function handleAddItem(){
+/* $.ajax({
+     type: "POST",
+     url: '/api/users',
+     data: JSON.stringify({
+         Assignments: [{
+            assignmentName: $("js-assignment-name").val(),
+            assignmentDate: $("js-assignment-date").val(),
+         }] 
+     })
+ }) */
 
 }
+    
 
 $(function () {
 
@@ -51,8 +108,8 @@ $(function () {
                 lastName: $("#lastName").val(),
                 isAdmin: $('input[name=isAdmin]:checked').val(),
                 Assignments: [{
-                    assignmentName: 'Okay',
-                    assignmentDate: 'and',
+                    assignmentName: '',
+                    assignmentDate: '',
                 }]
             }),
             success: success,
@@ -80,6 +137,9 @@ $(function () {
 });
 
 ////////////////////////////////////////
+function loadStudentUsers(){
+    return $('.userList').html()
+}
 
 $(function () {
     $('form[name=login]').submit(function (e) {
@@ -169,6 +229,10 @@ $(function () {
         }
     }
 })
+
+$(function () {
+
+})
 /////////////////////////////////////
 
 function loadDashboardTeacher() {
@@ -181,29 +245,19 @@ function loadDashboardTeacher() {
     </div>
         <form class="assignmentForm" name="js-assignment-list-form">
             <label for="assignment-list-entry">Username</label>
-            <input type="text" class="forDashboard" name="assignment-list-entry">
+            <input type="text" id="username" class="forDashboard" name="assignment-list-entry">
             
             <label for="assignment-list-entry">Assignment Name</label>
-            <input type="text" class="forDashboard" name="shopping-list-entry" placeholder="Assignment #1">
+            <input type="text" class="forDashboard" id="js-assignment-name" name="assignment-entry" placeholder="Assignment #1">
           
             <label for="assignment-list-entry">Date</label>
-            <input type="date" class="forDashboard forDates" name="assignment-list-entry">
+            <input type="date" class="forDashboard forDates" id="js-assignment-date" name="assignment-list-entry">
 
             <button type="submit" class="submitAssignment">Add item</button>
         </form>
        
     <ul class="assignmentList">
       <li class="showAssignment">
-        <span class="username"></span>
-        <span class="Assignments"></span>
-        <div class="">
-          <button class="assignment-item-update">
-            <span class="button-label">update</span>
-          </button>
-          <button class="assignment-item-delete">
-            <span class="button-label">delete</span>
-          </button>
-        </div>
       </li>
     </ul>
   </div>

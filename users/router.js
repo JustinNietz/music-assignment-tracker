@@ -149,6 +149,7 @@ router.post('/:id', jsonParser, (req, res) => {
   .then(user => {
     const assignment = {}; 
     assignment.assignmentName = req.body.assignmentName;
+    assignment.assignmentDate = req.body.assignmentDate;
     console.log(user);
     user.Assignments.push(assignment);
     console.log(user);
