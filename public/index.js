@@ -40,12 +40,13 @@ const handleAddItem = () => {
                             assignmentDate: $("#js-assignment-date").val()
                      
                     }),
-                    success: function createList(list){
-                        console.log(listUsers[i].Assignments);
-                        for(let j = 0; j < listUsers[i].Assignments.length; j++){
+                    success: function createList(userObj){
+                        $('.showAssignment').empty()
+                        for(let j = 0; j < userObj.Assignments.length; j++){
+
                             $('.showAssignment').append(`
                             <li>
-                            <span>Username: ${listUsers[i].username} Assignment: ${listUsers[i].Assignments[j].assignmentName} Date: ${listUsers[i].Assignments[j].assignmentDate}</span>
+                            <span>Username: ${userObj.username} Assignment: ${userObj.Assignments[j].assignmentName} Date: ${userObj.Assignments[j].assignmentDate}</span>
                             <button class="assignment-item-update">
                             <span class="button-label">update</span>
                             </button>
