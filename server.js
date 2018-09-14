@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -17,7 +17,7 @@ const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 mongoose.Promise = global.Promise;
 
-const { PORT, DATABASE_URL } = require('./config');
+const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
 
 const app = express();
 
@@ -67,14 +67,16 @@ app.use('*', (req, res) => {
 let server;
 
 function runServer(databaseUrl, port = PORT) {
+  const isTest = (databaseUrl === TEST_DATABASE_URL)
+  console.log(isTest? 'SERVER RUNS IN TEST MODE':'SERVER RUNS IN PRODUCTION MODE')
   return new Promise((resolve, reject) => {
-    mongoose.connect(DATABASE_URL, { useNewUrlParser: true }, err => {
+    mongoose.connect(databaseUrl, { useNewUrlParser: true }, err => {
       if (err) {
         return reject(err);
       }
       server = app
-        .listen(PORT, () => {
-          console.log(`Your app is listening on port ${PORT}`);
+        .listen(port, () => {
+          console.log(`Your app is listening on port ${port}`);
           resolve();
         })
         .on('error', err => {

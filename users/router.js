@@ -156,7 +156,7 @@ router.post('/:id', jsonParser, (req, res) => {
     User
     .findByIdAndUpdate(id, user, {new: true})
     .then(updatedUser => {
-      res.status(204).end()
+      res.status(200).json(updatedUser.serialize())
     })
     
   })
