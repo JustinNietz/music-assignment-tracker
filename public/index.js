@@ -3,12 +3,12 @@
 //Reloads page to the sign-up screen
 const sendSignUp = () => {
     window.location.href = "sign-up.html";
-}
+};
 
 //Reloads page to the login screen
 const sendLogin = () => {
     window.location.href = "login.html";
-}
+};
 
 //Mobile responsive navigation bar
 const navDropDown = () => {
@@ -18,17 +18,57 @@ const navDropDown = () => {
     } else {
         x.className = "topnav";
     }
-}
+};
 
-//Adds an item to a specific user's dashboard
+//To sign up for an account
+const signUpForm = () => {
+    //First, a POST request with values the user inputs
+    $.ajax({
+        type: "POST",
+        url: '/api/users',
+        data: JSON.stringify({
+            username: $("#username").val(),
+            password: $("#password").val(),
+            firstName: $("#firstName").val(),
+            lastName: $("#lastName").val(),
+            isAdmin: $('input[name=isAdmin]:checked').val(),
+            // Assignments will be added by an admin user later
+            Assignments: [{
+                assignmentName: '',
+                assignmentDate: '',
+            }]
+        }),
+        // if there is a successful sign up, switch pages to login.html
+        success: function success(response){
+            console.log(response) //JWT
+            window.location.href="login.html";
+        },
+        //if there is an error, show the error on the sign up form
+        error: function error(err) {
+            $('.js-errorsUser').html(`Username ${err.responseJSON.message}!`);
+            $('.js-errorsPass').html(`Password ${err.responseJSON.message}!`);
+        
+            if (err.responseJSON.location === "username") {
+                $('.js-errorsPass').hide();
+                $('.js-errorsUser').show();
+            } else if (err.responseJSON.location === "password") {
+                $('.js-errorsUser').hide();
+                $('.js-errorsPass').show();
+            }
+        },
+        contentType: 'application/json'
+    });
+    return false;
+};
+
+//Only for admin users - Adds an item to a specific student user's dashboard
 const handleAddItem = () => {
     //First, GET the id of a user inputted
     $.ajax({
         type: "GET",
         url: '/api/users',
         success: function studentUsers(listUsers){
-            for (let i = 0; i < listUsers.length; i++) {
-            
+            for (let i = 0; i < listUsers.length; i++) {            
                 if (listUsers[i].username === $("#username").val() && listUsers[i].isAdmin === false){
                 // Then, POST an assignment of a specific user by id
                 $.ajax({
@@ -38,12 +78,10 @@ const handleAddItem = () => {
                         id: listUsers[i].id,
                             assignmentName: $("#js-assignment-name").val(),
                             assignmentDate: $("#js-assignment-date").val()
-                     
                     }),
                     success: function createList(userObj){
                         $('.showAssignment').empty()
                         for(let j = 0; j < userObj.Assignments.length; j++){
-
                             $('.showAssignment').append(`
                             <li>
                             <span>Username: ${userObj.username} Assignment: ${userObj.Assignments[j].assignmentName} Date: ${userObj.Assignments[j].assignmentDate}</span>
@@ -52,97 +90,96 @@ const handleAddItem = () => {
                             </button>
                             <button class="assignment-item-delete">
                             <span class="button-label">delete</span>
-                            </button><br></li>`);
-                     
-                        }
-                       
-                    
+                            </button><br></li>`);    
+                        }  
+                    },
+                    error: function error(){
+                        console.log('An error has occured!');
                     },
                     contentType: 'application/json'
                 })
+                }
+            }
         }
-    }
-}
     })
+};
 
-/* $.ajax({
-     type: "POST",
-     url: '/api/users',
-     data: JSON.stringify({
-         Assignments: [{
-            assignmentName: $("js-assignment-name").val(),
-            assignmentDate: $("js-assignment-date").val(),
-         }] 
-     })
- }) */
-
-}
-    
-
+//For all form submissions
 $(function () {
 
     $('body').submit(function (ev) {
-        console.log('CAUGHT A SUBMIT', ev)
         ev.preventDefault();
         const target = $(ev.target)
 
-        // handle each form by name
+        //Sign up form submission
+        if (target.attr('name') === 'signup'){
+            signUpForm();
+        }
+        if(target.attr('name') === 'login'){
+            loginForm();
+        }
+        //Adding list item
         if (target.attr('name') === 'js-assignment-list-form') {
             console.log('You clicked ADD item!')
             handleAddItem()
         }
+        //Deleting list item
         if (target.attr('name') === 'list-items') {
             console.log('You clicked LIST item!')
         }
     })
-
-    $('form[name=signup]').submit(function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: "POST",
-            url: '/api/users',
-            data: JSON.stringify({
-                username: $("#username").val(),
-                password: $("#password").val(),
-                firstName: $("#firstName").val(),
-                lastName: $("#lastName").val(),
-                isAdmin: $('input[name=isAdmin]:checked').val(),
-                Assignments: [{
-                    assignmentName: '',
-                    assignmentDate: '',
-                }]
-            }),
-            success: success,
-            error: error,
-            contentType: 'application/json'
-        });
-        return false;
-    });
-    function success(response) {
-        console.log(response)
-        window.location.href = "login.html";
-    }
-    function error(err) {
-        $('.js-errorsUser').html(`Username ${err.responseJSON.message}!`);
-        $('.js-errorsPass').html(`Password ${err.responseJSON.message}!`);
-
-        if (err.responseJSON.location === "username") {
-            $('.js-errorsPass').hide();
-            $('.js-errorsUser').show();
-        } else if (err.responseJSON.location === "password") {
-            $('.js-errorsUser').hide();
-            $('.js-errorsPass').show();
-        }
-    }
 });
 
-////////////////////////////////////////
-function loadStudentUsers(){
-    return $('.userList').html()
-}
-
-$(function () {
+// for Login form
+const loginForm = () => {
+    //POST username and password in exchange for a JWT token
+    $.ajax({
+        type: "POST",
+        url: '/api/auth/login',
+        data: JSON.stringify({
+            username: $("#username").val(),
+            password: $("#password").val(),
+        }),
+        contentType: 'application/json',
+        success: function success(response){
+            console.log(response);
+            // GET list of all users to find out if they are an admin
+            $.ajax({
+                type: "GET",
+                url: `/api/users/`,
+                success: function successful(jsonRes){
+                    for (let i = 0; i < jsonRes.length; i++) {
+                        if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === true) {
+                            $.ajax({
+                                type: "GET",
+                                url: '/api/protected',
+                                headers: {
+                                    Authorization: `Bearer ${JWT_TOKEN.authToken}`
+                                }
+                            })
+                            console.log('you are a teacher');
+                            console.log(jsonRes);
+                            loadDashboardTeacher();
+                            $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(4900).fadeOut();
+                            $('.teacherDash').html('Teacher Dashboard').hide().delay(5000).fadeIn();
+                        } else if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === false) {
+                            console.log('You are a student');
+                            loadDashboardStudent();
+                            $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(5000).fadeOut();
+                        }                                
+                    } 
+                },
+                error: function error(err){
+                    console.log(err)
+                },
+                contentType: 'application/json'
+            });
+            return false;
+        }
+    })
+};
+             
+/*$(function () {
     $('form[name=login]').submit(function (e) {
         e.preventDefault();
 
@@ -159,8 +196,10 @@ $(function () {
         });
         return false;
     });
-    function success(response) {
-        console.log(response); //authtoken
+
+
+    function success(JWT_TOKEN) {
+        console.log(JWT_TOKEN); //authtoken
         $.ajax({
             type: "GET",
             url: `/api/users/`,
@@ -182,7 +221,7 @@ $(function () {
                                     type: "GET",
                                     url: '/api/protected',
                                     headers: {
-                                        Authorization: `Bearer ${response.authToken}`
+                                        Authorization: `Bearer ${JWT_TOKEN.authToken}`
                                     },
                                     success: function work(successy) {
                                         loadDashboardTeacher();
@@ -230,12 +269,10 @@ $(function () {
         }
     }
 })
+*/
 
-$(function () {
 
-})
-/////////////////////////////////////
-
+// If logged in as an admin, this will appear
 function loadDashboardTeacher() {
     const dashboard = `
     <h2 class="Greeting"></h2>
@@ -244,32 +281,30 @@ function loadDashboardTeacher() {
             <h2 class="teacherDash"></h2>
         </div>
     </div>
-        <form class="assignmentForm" name="js-assignment-list-form">
-            <label for="assignment-list-entry">Username</label>
-            <input type="text" id="username" class="forDashboard" name="assignment-list-entry">
+    <form class="assignmentForm" name="js-assignment-list-form">
+        <label for="assignment-list-entry">Username</label>
+        <input type="text" id="username" class="forDashboard" name="assignment-list-entry">
             
-            <label for="assignment-list-entry">Assignment Name</label>
-            <input type="text" class="forDashboard" id="js-assignment-name" name="assignment-entry" placeholder="Assignment #1">
+        <label for="assignment-list-entry">Assignment Name</label>
+        <input type="text" class="forDashboard" id="js-assignment-name" name="assignment-entry" placeholder="Assignment #1">
           
-            <label for="assignment-list-entry">Date</label>
-            <input type="date" class="forDashboard forDates" id="js-assignment-date" name="assignment-list-entry">
+        <label for="assignment-list-entry">Date</label>
+        <input type="date" class="forDashboard forDates" id="js-assignment-date" name="assignment-list-entry">
 
-            <button type="submit" class="submitAssignment">Add item</button>
-        </form>
+        <button type="submit" class="submitAssignment">Add item</button>
+    </form>
        
     <ul class="assignmentList">
-      <li class="showAssignment">
-      </li>
+      <li class="showAssignment"></li>
     </ul>
-  </div>
+  </div>`
 
-    `
     $('.formRemove-js').remove();
     $('.dashboard-js').html(dashboard);
 
 }
 
-
+//if logged in as a student, this will appear
 function loadDashboardStudent() {
     const dashboard = `
     <h3 class="Greeting"></h3>
