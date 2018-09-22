@@ -1,5 +1,11 @@
 'use strict';
 
+// initial app state
+const APP = {
+    JWT_TOKEN: {},
+    lastAssignments: []
+}
+
 //Reloads page to the sign-up screen
 const sendSignUp = () => {
     window.location.href = "sign-up.html";
@@ -39,15 +45,15 @@ const signUpForm = () => {
             }]
         }),
         // if there is a successful sign up, switch pages to login.html
-        success: function success(response){
+        success: function success(response) {
             console.log(response) //JWT
-            window.location.href="login.html";
+            window.location.href = "login.html";
         },
         //if there is an error, show the error on the sign up form
         error: function error(err) {
             $('.js-errorsUser').html(`Username ${err.responseJSON.message}!`);
             $('.js-errorsPass').html(`Password ${err.responseJSON.message}!`);
-        
+
             if (err.responseJSON.location === "username") {
                 $('.js-errorsPass').hide();
                 $('.js-errorsUser').show();
@@ -67,22 +73,22 @@ const handleAddItem = () => {
     $.ajax({
         type: "GET",
         url: '/api/users',
-        success: function studentUsers(listUsers){
-            for (let i = 0; i < listUsers.length; i++) {            
-                if (listUsers[i].username === $("#username").val() && listUsers[i].isAdmin === false){
-                // Then, POST an assignment of a specific user by id
-                $.ajax({
-                    type: "POST",
-                    url: '/api/users/' + listUsers[i].id,
-                    data: JSON.stringify({
-                        id: listUsers[i].id,
+        success: function studentUsers(listUsers) {
+            for (let i = 0; i < listUsers.length; i++) {
+                if (listUsers[i].username === $("#username").val() && listUsers[i].isAdmin === false) {
+                    // Then, POST an assignment of a specific user by id
+                    $.ajax({
+                        type: "POST",
+                        url: '/api/users/' + listUsers[i].id,
+                        data: JSON.stringify({
+                            id: listUsers[i].id,
                             assignmentName: $("#js-assignment-name").val(),
                             assignmentDate: $("#js-assignment-date").val()
-                    }),
-                    success: function createList(userObj){
-                        $('.showAssignment').empty()
-                        for(let j = 0; j < userObj.Assignments.length; j++){
-                            $('.showAssignment').append(`
+                        }),
+                        success: function createList(userObj) {
+                            $('.showAssignment').empty()
+                            for (let j = 0; j < userObj.Assignments.length; j++) {
+                                $('.showAssignment').append(`
                             <li>
                             <span>Username: ${userObj.username} Assignment: ${userObj.Assignments[j].assignmentName} Date: ${userObj.Assignments[j].assignmentDate}</span>
                             <button class="assignment-item-update">
@@ -90,14 +96,14 @@ const handleAddItem = () => {
                             </button>
                             <button class="assignment-item-delete">
                             <span class="button-label">delete</span>
-                            </button><br></li>`);    
-                        }  
-                    },
-                    error: function error(){
-                        console.log('An error has occured!');
-                    },
-                    contentType: 'application/json'
-                })
+                            </button><br></li>`);
+                            }
+                        },
+                        error: function error() {
+                            console.log('An error has occured!');
+                        },
+                        contentType: 'application/json'
+                    })
                 }
             }
         }
@@ -107,15 +113,18 @@ const handleAddItem = () => {
 //For all form submissions
 $(function () {
 
+    console.log('APP STARTS', new Date().toLocaleTimeString())
+    restoreLoginToken()
+
     $('body').submit(function (ev) {
         ev.preventDefault();
         const target = $(ev.target)
 
         //Sign up form submission
-        if (target.attr('name') === 'signup'){
+        if (target.attr('name') === 'signup') {
             signUpForm();
         }
-        if(target.attr('name') === 'login'){
+        if (target.attr('name') === 'login') {
             loginForm();
         }
         //Adding list item
@@ -130,6 +139,19 @@ $(function () {
     })
 });
 
+function saveLoginToken() {
+    Cookies.set('APP_TOKEN', JSON.stringify(APP.JWT_TOKEN))
+}
+
+function restoreLoginToken() {
+    const savedTokenJSONStr = Cookies.get('APP_TOKEN')
+    if (savedTokenJSONStr) {
+        APP.JWT_TOKEN = JSON.parse(savedTokenJSONStr)
+        console.log('LOGIN RESTORED, APP IS NOW', APP)
+    }
+}
+
+
 // for Login form
 const loginForm = () => {
     //POST username and password in exchange for a JWT token
@@ -141,20 +163,24 @@ const loginForm = () => {
             password: $("#password").val(),
         }),
         contentType: 'application/json',
-        success: function success(response){
+        success: function success(response) {
+            APP.JWT_TOKEN = response
+            saveLoginToken()
+
             console.log(response);
             // GET list of all users to find out if they are an admin
+            // DRY
             $.ajax({
                 type: "GET",
                 url: `/api/users/`,
-                success: function successful(jsonRes){
+                success: function successful(jsonRes) {
                     for (let i = 0; i < jsonRes.length; i++) {
                         if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === true) {
                             $.ajax({
                                 type: "GET",
                                 url: '/api/protected',
                                 headers: {
-                                    Authorization: `Bearer ${JWT_TOKEN.authToken}`
+                                    Authorization: `Bearer ${APP.JWT_TOKEN.authToken}`
                                 }
                             })
                             console.log('you are a teacher');
@@ -166,10 +192,10 @@ const loginForm = () => {
                             console.log('You are a student');
                             loadDashboardStudent();
                             $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(5000).fadeOut();
-                        }                                
-                    } 
+                        }
+                    }
                 },
-                error: function error(err){
+                error: function error(err) {
                     console.log(err)
                 },
                 contentType: 'application/json'
@@ -178,7 +204,7 @@ const loginForm = () => {
         }
     })
 };
-             
+
 /*$(function () {
     $('form[name=login]').submit(function (e) {
         e.preventDefault();
