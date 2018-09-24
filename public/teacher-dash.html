@@ -1,0 +1,38 @@
+<!DOCTYPE=html> 
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        <link href="float.css" rel="stylesheet" type="text/css" />
+        <link href="index.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h2 class="Greeting"></h2>
+    <div class="row">
+        <div class="col-12">
+            <h2 class="teacherDash"></h2>
+        </div>
+    </div>
+    <form class="assignmentForm" name="js-assignment-list-form">
+        <label for="assignment-list-entry">Username</label>
+        <input type="text" id="username" class="forDashboard" name="assignment-list-entry">
+            
+        <label for="assignment-list-entry">Assignment Name</label>
+        <input type="text" class="forDashboard" id="js-assignment-name" name="assignment-entry" placeholder="Assignment #1">
+          
+        <label for="assignment-list-entry">Date</label>
+        <input type="date" class="forDashboard forDates" id="js-assignment-date" name="assignment-list-entry">
+
+        <button type="submit" class="submitAssignment">Add item</button>
+    </form>
+       
+    <ul class="assignmentList">
+      <li class="showAssignment"></li>
+    </ul>
+  </div>  
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>   
+    </body>
+</html>

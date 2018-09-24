@@ -184,16 +184,18 @@ const loginForm = () => {
                                 headers: {
                                     Authorization: `Bearer ${APP.JWT_TOKEN.authToken}`
                                 }
-                            })
-                            console.log('you are a teacher');
+                            });
+                           /* console.log('you are a teacher');
                             console.log(jsonRes);
                             loadDashboardTeacher();
                             $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(4900).fadeOut();
                             $('.teacherDash').html('Teacher Dashboard').hide().delay(5000).fadeIn();
+                            */
                         } else if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === false) {
-                            console.log('You are a student');
+                           /* console.log('You are a student');
                             loadDashboardStudent();
                             $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(5000).fadeOut();
+                            */
                         }
                     }
                 },
