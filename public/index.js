@@ -120,7 +120,7 @@ $(function () {
         ev.preventDefault();
         const target = $(ev.target)
 
-        //Sign up form submission
+        //Sign up form submission    
         if (target.attr('name') === 'signup') {
             signUpForm();
         }
@@ -139,20 +139,22 @@ $(function () {
     })
 });
 
-function saveLoginToken() {
-    Cookies.set('APP_TOKEN', JSON.stringify(APP.JWT_TOKEN))
-}
+//To save the JWT token as a cookie 
+const saveLoginToken = () => {
+    Cookies.set('APP_TOKEN', JSON.stringify(APP.JWT_TOKEN));
+};
 
-function restoreLoginToken() {
+//To restore the login when page is reloaded to stay logged in.
+const restoreLoginToken = () => {
     const savedTokenJSONStr = Cookies.get('APP_TOKEN')
     if (savedTokenJSONStr) {
-        APP.JWT_TOKEN = JSON.parse(savedTokenJSONStr)
-        console.log('LOGIN RESTORED, APP IS NOW', APP)
+        APP.JWT_TOKEN = JSON.parse(savedTokenJSONStr);
+        console.log('LOGIN RESTORED, APP IS NOW', APP);
     }
-}
+};
 
 
-// for Login form
+//For Login form
 const loginForm = () => {
     //POST username and password in exchange for a JWT token
     $.ajax({
@@ -164,9 +166,9 @@ const loginForm = () => {
         }),
         contentType: 'application/json',
         success: function success(response) {
-            APP.JWT_TOKEN = response
-            saveLoginToken()
-
+            // response is the JWT of the logged in user
+            APP.JWT_TOKEN = response;
+            saveLoginToken();
             console.log(response);
             // GET list of all users to find out if they are an admin
             // DRY
