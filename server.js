@@ -53,9 +53,10 @@ app.get("/", (req, res) => {
 
 // A protected endpoint which needs a valid JWT to access it
 app.get('/api/protected', jwtAuth, (req, res) => {
-  return res.json({
+   res.sendFile(__dirname  + "/public/teacher-dash.html" );
+  /*return res.json({
     data: 'rosebud'
-  });
+  }); */
 });
 
 app.use('*', (req, res) => {

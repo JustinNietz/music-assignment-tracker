@@ -183,8 +183,14 @@ const loginForm = () => {
                                 url: '/api/protected',
                                 headers: {
                                     Authorization: `Bearer ${APP.JWT_TOKEN.authToken}`
+                                },
+                                success: function loadAuthorized(success){
+                                    window.location.href = "teacher-dash.html";
+                                },
+                                error: function unauthorized(error){
+                                    console.log(error);
                                 }
-                            });
+                            })
                            /* console.log('you are a teacher');
                             console.log(jsonRes);
                             loadDashboardTeacher();
