@@ -1,60 +1,65 @@
 <!DOCTYPE=html>
 <html lang="en">
-    <head>
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-        <link href="float.css" rel="stylesheet" type="text/css" />
-        <link href="index.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <!--Navigation Bar-->
-        <nav role="navigation" class="topnav" id="myTopnav">
-            <a href="index.html" class="active">Home</a>
-            <a href="#about">About</a> <!--Add this after finished-->
-            <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
-            <i class="fa fa-bars"></i>
-            </a>      
-        </nav>
 
-      <!--Sign-up Form-->
-      <form name="signup" class='signup-form'>
-        <legend>Sign up</legend>
-        <fieldset name="signup">
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="float.css" rel="stylesheet" type="text/css" />
+  <link href="index.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
-          <label for="firstName">First Name</label><br>
-          <input type="firstName" name='firstName' class="forForm" id='firstName' placeholder='John' /><br>
-  
-          <label for="lastName">Last Name</label><br>
-          <input type="lastName" name='lastName' class="forForm" id='lastName' placeholder='Doe' /><br>
+<body>
+  <!--Navigation Bar-->
+  <nav role="navigation" class="topnav" id="myTopnav">
+    <a href="index.html" class="active">Home</a>
+    <a href="#about">About</a>
+    <!--Add this after finished-->
+    <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </nav>
 
-          <label for="username">Username</label><br>
-          <input class="forForm" type="username" name='username' id='username' /><br>
-          <p class="js-errorsUser"></p>
-          
-          <label for="password">Password</label><br>
-          <input type="password" name='password' class="forForm" id='password' /><br>
-          <p class="js-errorsPass"></p>
+  <!--Sign-up Form-->
+  <form name="signup" class='signup-form'>
+    <legend>Sign up</legend>
+    <fieldset name="signup">
 
-          <label>Teacher or Student?</label><br>
-          <input type="radio"  id="isAdminTrue"name='isAdmin' value='true'/>
-          <label for="isAdminTrue" class="radioButton">Teacher</label>
-          <input type="radio" id="isAdminFalse"name='isAdmin' value='false' checked/>
-          <label for="isAdminFalse" class="radioButton">Student</label>
+      <label for="firstName">First Name</label><br>
+      <input type="firstName" name='firstName' class="forForm" id='firstName' placeholder='John' /><br>
 
-          <button class="formButton" type='submit'><b>Sign up</b></button>
+      <label for="lastName">Last Name</label><br>
+      <input type="lastName" name='lastName' class="forForm" id='lastName' placeholder='Doe' /><br>
 
-        </fieldset>
-      </form>
+      <label for="username">Username</label><br>
+      <input class="forForm" type="username" name='username' id='username' /><br>
+      <p class="js-errorsUser"></p>
 
-      <!--To go to login page-->
-      <section role="banner">
-        <h3>Already have an account? <a href="login.html" class="loginExisting">Log in</a></h3>
-      </section>
+      <label for="password">Password</label><br>
+      <input type="password" name='password' class="forForm" id='password' /><br>
+      <p class="js-errorsPass"></p>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="text/javascript" src="index.js"></script>
-    </body>
+      <label>Teacher or Student?</label><br>
+      <input type="radio" id="isAdminTrue" name='isAdmin' value='true' />
+      <label for="isAdminTrue" class="radioButton">Teacher</label>
+      <input type="radio" id="isAdminFalse" name='isAdmin' value='false' checked />
+      <label for="isAdminFalse" class="radioButton">Student</label>
+
+      <button class="formButton" type='submit'><b>Sign up</b></button>
+
+    </fieldset>
+  </form>
+
+  <!--To go to login page-->
+  <section role="banner">
+    <h3>Already have an account? <a href="login.html" class="loginExisting">Log in</a></h3>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+</body>
+
 </html>
 
 <!--Need

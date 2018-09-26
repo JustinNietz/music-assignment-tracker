@@ -1,53 +1,56 @@
 <!DOCTYPE=html>
 <html lang="en">
-    <head>
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-        <link href="float.css" rel="stylesheet" type="text/css" />
-        <link href="index.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
 
-    <body>
-        <nav role="navigation" class="topnav" id="myTopnav">
-            <a href="index.html" class="active">Home</a>
-            <a href="#about">About</a> <!--Add this after finished-->
-            <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="float.css" rel="stylesheet" type="text/css" />
+    <link href="index.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <nav role="navigation" class="topnav" id="myTopnav">
+        <a href="index.html" class="active">Home</a>
+        <a href="#about">About</a>
+        <!--Add this after finished-->
+        <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
             <i class="fa fa-bars"></i>
-            </a>
-        </nav>
+        </a>
+    </nav>
 
     <main>
         <section class="formRemove-js">
-            <form name="login" class='signup-form' action="/api/auth/login" method ='post'>
+            <form name="login" class='signup-form' action="/api/auth/login" method='post'>
                 <legend>Login</legend>
                 <fieldset name="login">
-            
+
                     <label for="username">Username</label><br>
-                    <input type="username" name='username' class="forForm" id='username'/><br>
-              
+                    <input type="username" name='username' class="forForm" id='username' /><br>
+
                     <label for="lastName">Password</label><br>
-                    <input type="password" name='password' class="forForm" id='password'/><br>
+                    <input type="password" name='password' class="forForm" id='password' /><br>
                     <p class="js-errorIncorrect"></p>
                     <button class="formButton" type='submit'><b>Login</b></button>
                 </fieldset>
             </form>
         </section>
-                    
+
         <section class="formRemove-js">
             <h3>Don't have an account? <a href="sign-up.html" class="toSignUp">Sign up</a></h3>
         </section>
-         
+
 
     </main>
 
-        <section class="dashboard-js">
-            <p class="assignments-js"></p>
-        </section>
+    <section class="dashboard-js">
+        <p class="assignments-js"></p>
+    </section>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-        <script type="text/javascript" src="index.js"></script>
-    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+
 </html>
 <!--get rid of login and put dashboard-->
