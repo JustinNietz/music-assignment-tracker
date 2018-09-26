@@ -2,7 +2,7 @@
 
 // initial app state
 const APP = {
-    JWT_TOKEN: {},
+    LOGIN_INFO: {},
     lastAssignments: []
 }
 
@@ -85,6 +85,9 @@ const handleAddItem = () => {
                             assignmentName: $("#js-assignment-name").val(),
                             assignmentDate: $("#js-assignment-date").val()
                         }),
+                        headers: {
+                            Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
+                        },
                         success: function createList(userObj) {
                             $('.showAssignment').empty()
                             for (let j = 0; j < userObj.Assignments.length; j++) {
@@ -141,15 +144,24 @@ $(function () {
 
 //To save the JWT token as a cookie 
 const saveLoginToken = () => {
-    Cookies.set('APP_TOKEN', JSON.stringify(APP.JWT_TOKEN));
+    Cookies.set('APP_TOKEN', JSON.stringify(APP.LOGIN_INFO));
 };
 
 //To restore the login when page is reloaded to stay logged in.
 const restoreLoginToken = () => {
     const savedTokenJSONStr = Cookies.get('APP_TOKEN')
     if (savedTokenJSONStr) {
-        APP.JWT_TOKEN = JSON.parse(savedTokenJSONStr);
+        APP.LOGIN_INFO = JSON.parse(savedTokenJSONStr);
         console.log('LOGIN RESTORED, APP IS NOW', APP);
+        const redirectURL = APP.LOGIN_INFO.isAdmin ? '/dash-teacher.html' : '/student-dash.html'
+        if (window.location.pathname !== redirectURL) {
+            window.location.href = redirectURL
+        }
+    } else {
+        const redirectURL = '/login.html'
+        if (window.location.pathname !== redirectURL) {
+            window.location.href = redirectURL
+        }
     }
 };
 
@@ -167,51 +179,13 @@ const loginForm = () => {
         contentType: 'application/json',
         success: function success(response) {
             // response is the JWT of the logged in user
-            APP.JWT_TOKEN = response;
+            APP.LOGIN_INFO = response;
             saveLoginToken();
-            console.log(response);
-            // GET list of all users to find out if they are an admin
-            // DRY
-            $.ajax({
-                type: "GET",
-                url: `/api/users/`,
-                success: function successful(jsonRes) {
-                   
-                            $.ajax({
-                                type: "GET",
-                                url: '/api/protected',
-                                headers: {
-                                    Authorization: `Bearer ${APP.JWT_TOKEN.authToken}`
-                                },
-                                success: function loadAuthorized(success){
-                                   
-                                    window.location.href = success;
-                                    /*(for (let i = 0; i < jsonRes.length; i++) {
-                                        if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === true) {
-                                            window.location.href = success;
-                                        } else if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === false){
-                                            window.location.href= "student-dash.html";
-                                        }
-                                    } */
-                                },
-                                error: function unauthorized(error){
-                                    console.log(error);
-                                }
-                            })
-                           /* console.log('you are a teacher');
-                            console.log(jsonRes);
-                            loadDashboardTeacher();
-                            $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(4900).fadeOut();
-                            $('.teacherDash').html('Teacher Dashboard').hide().delay(5000).fadeIn();
-                            */
-
-                },
-                error: function error(err) {
-                    console.log(err)
-                },
-                contentType: 'application/json'
-            });
-            return false;
+            const redirectURL = APP.LOGIN_INFO.isAdmin ? '/dash-teacher.html' : 'student-dash.html'
+            if (window.location.pathname !== redirectURL) {
+                window.location.href = redirectURL
+            }
+            return
         }
     })
 };
@@ -235,8 +209,8 @@ const loginForm = () => {
     });
 
 
-    function success(JWT_TOKEN) {
-        console.log(JWT_TOKEN); //authtoken
+    function success(LOGIN_INFO) {
+        console.log(LOGIN_INFO); //authtoken
         $.ajax({
             type: "GET",
             url: `/api/users/`,
@@ -258,7 +232,7 @@ const loginForm = () => {
                                     type: "GET",
                                     url: '/api/protected',
                                     headers: {
-                                        Authorization: `Bearer ${JWT_TOKEN.authToken}`
+                                        Authorization: `Bearer ${LOGIN_INFO.authToken}`
                                     },
                                     success: function work(successy) {
                                         loadDashboardTeacher();

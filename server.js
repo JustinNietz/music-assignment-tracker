@@ -43,21 +43,9 @@ passport.use(jwtStrategy);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 
-
-
-const jwtAuth = passport.authenticate('jwt', { session: false });
-
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
   });
-
-// A protected endpoint which needs a valid JWT to access it
-app.get('/api/protected', jwtAuth, (req, res) => {
-   res.sendFile(__dirname  + "/dash-teacher.html" );
-  /*return res.json({
-    data: 'rosebud'
-  }); */
-});
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });

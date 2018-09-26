@@ -1,5 +1,7 @@
 'use strict';
 const express = require('express');
+const passport = require('passport');
+const { router: authRouter, localStrategy, jwtStrategy } = require('../auth');
 const bodyParser = require('body-parser');
 
 const {User} = require('./models');
@@ -7,6 +9,9 @@ const {User} = require('./models');
 const router = express.Router();
 
 const jsonParser = bodyParser.json();
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 
 // Post to register a new user
 
@@ -141,9 +146,16 @@ router.post('/', jsonParser, (req, res) => {
     
 });
 
-router.post('/:id', jsonParser, (req, res) => {
+router.post('/:id', jsonParser, jwtAuth, (req, res) => {
   const id = req.body.id;
-  
+  const {user} = req
+  console.log(`User ${user.username} is POSTing as ${user.isAdmin?'admin':'student'}`)
+
+  if(!user.isAdmin){
+    return res.status(401).json({message:'You must be a teacher'})
+  }
+
+
   User
   .findById(id)
   .then(user => {
