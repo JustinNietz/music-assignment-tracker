@@ -176,8 +176,7 @@ const loginForm = () => {
                 type: "GET",
                 url: `/api/users/`,
                 success: function successful(jsonRes) {
-                    for (let i = 0; i < jsonRes.length; i++) {
-                        if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === true) {
+                   
                             $.ajax({
                                 type: "GET",
                                 url: '/api/protected',
@@ -185,7 +184,15 @@ const loginForm = () => {
                                     Authorization: `Bearer ${APP.JWT_TOKEN.authToken}`
                                 },
                                 success: function loadAuthorized(success){
-                                    window.location.href = "teacher-dash.html";
+                                   
+                                    window.location.href = success;
+                                    /*(for (let i = 0; i < jsonRes.length; i++) {
+                                        if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === true) {
+                                            window.location.href = success;
+                                        } else if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === false){
+                                            window.location.href= "student-dash.html";
+                                        }
+                                    } */
                                 },
                                 error: function unauthorized(error){
                                     console.log(error);
@@ -197,13 +204,7 @@ const loginForm = () => {
                             $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(4900).fadeOut();
                             $('.teacherDash').html('Teacher Dashboard').hide().delay(5000).fadeIn();
                             */
-                        } else if (jsonRes[i].username === ($('#username').val()) && jsonRes[i].isAdmin === false) {
-                           /* console.log('You are a student');
-                            loadDashboardStudent();
-                            $('.Greeting').html(`Hello ${jsonRes.firstName}!`).show().delay(5000).fadeOut();
-                            */
-                        }
-                    }
+
                 },
                 error: function error(err) {
                     console.log(err)
