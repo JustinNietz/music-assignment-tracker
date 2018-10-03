@@ -184,9 +184,10 @@ const restoreLoginToken = () => {
             window.location.href = redirectURL
         }
     } else {
-        const redirectURL = '/login.html' //needs to be fixed
-        if (window.location.pathname !== redirectURL) {
-            window.location.href = redirectURL
+        const unathorizedURLs = ['/login.html', '/sign-up.html', '/index.html']
+
+        if (!unathorizedURLs.includes(window.location.pathname)) {
+            window.location.href = '/index.html'
         }
     }
 };
@@ -196,18 +197,18 @@ const loadUsers = () => {
     $.ajax({
         type: "GET",
         url: '/api/users',
-        success: function success(users){
+        success: function success(users) {
             for (let i = 0; i < users.length; i++) {
-            if(users[i].isAdmin === false){
-            console.log(users[i].username); //need to show this on dash-teacher
-            } 
-        }
+                if (users[i].isAdmin === false) {
+                    console.log(users[i].username); //need to show this on dash-teacher
+                }
+            }
         }
     });
 };
 
 //enables cookie removal to logout
-function logoutFeature(){
+function logoutFeature() {
     Cookies.remove('APP_TOKEN');
 }
 

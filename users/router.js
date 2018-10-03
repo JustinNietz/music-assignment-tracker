@@ -245,7 +245,7 @@ router.put('/', jsonParser, (req, res) => {
 
 }); 
 
-//delete will delete ONE assignment only at a time
+//delete will delete ONE assignment only at a time HTTP DELETE
 router.delete("/:id", jsonParser, (req, res) => {
   User
     .deleteOne(req.params.Assignments)
