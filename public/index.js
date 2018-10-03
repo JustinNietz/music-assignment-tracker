@@ -190,6 +190,10 @@ const loginForm = () => {
     })
 };
 
+function logoutFeature(){
+    Cookies.remove('APP_TOKEN');
+}
+
 /*$(function () {
     $('form[name=login]').submit(function (e) {
         e.preventDefault();
