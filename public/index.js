@@ -120,7 +120,7 @@ const handleAddItem = () => {
                             <li>
                             <span>Assignment: ${userObj.Assignments[j].assignmentName} Date: ${userObj.Assignments[j].assignmentDate}</span>
                             <button class="assignment-item-update">
-                            <span class="button-label">update</span>
+                            <span class="button-label">edit</span>
                             </button>
                             <button class="assignment-item-delete">
                             <span class="button-label">delete</span>
