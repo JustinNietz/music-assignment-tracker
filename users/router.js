@@ -201,6 +201,7 @@ router.get('/:id', (req, res) => {
     
 });
 
+//update will update ONE assignment at a time
 router.put('/:id', jsonParser, (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
@@ -244,11 +245,17 @@ router.put('/', jsonParser, (req, res) => {
 
 }); 
 
+//delete will delete ONE assignment only at a time
 router.delete("/:id", jsonParser, (req, res) => {
   User
-  .delete(req.params.Assignments);
-  console.log(`Deleted shopping list item \`${req.params.id}\``);
-  res.status(204).end();
+    .deleteOne(req.params.Assignments)
+    .then(() => {
+      res.status(204).json({ message: 'success' });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'something went terribly wrong' });
+    });
 });
 
 

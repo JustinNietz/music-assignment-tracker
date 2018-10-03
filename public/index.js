@@ -67,6 +67,30 @@ const signUpForm = () => {
     return false;
 };
 
+//For Login form
+const loginForm = () => {
+    //POST username and password in exchange for a JWT token
+    $.ajax({
+        type: "POST",
+        url: '/api/auth/login',
+        data: JSON.stringify({
+            username: $("#username").val(),
+            password: $("#password").val(),
+        }),
+        contentType: 'application/json',
+        success: function success(response) {
+            // response is the JWT of the logged in user
+            APP.LOGIN_INFO = response;
+            saveLoginToken();
+            const redirectURL = APP.LOGIN_INFO.isAdmin ? '/dash-teacher.html' : 'student-dash.html'
+            if (window.location.pathname !== redirectURL) {
+                window.location.href = redirectURL
+            }
+            return
+        }
+    })
+};
+
 //Only for admin users - Adds an item to a specific student user's dashboard
 const handleAddItem = () => {
     //First, GET the id of a user inputted
@@ -90,10 +114,11 @@ const handleAddItem = () => {
                         },
                         success: function createList(userObj) {
                             $('.showAssignment').empty()
+                            $('.showAssignment').append(`<h3>${userObj.username}</h3>`);
                             for (let j = 0; j < userObj.Assignments.length; j++) {
                                 $('.showAssignment').append(`
                             <li>
-                            <span>Username: ${userObj.username} Assignment: ${userObj.Assignments[j].assignmentName} Date: ${userObj.Assignments[j].assignmentDate}</span>
+                            <span>Assignment: ${userObj.Assignments[j].assignmentName} Date: ${userObj.Assignments[j].assignmentDate}</span>
                             <button class="assignment-item-update">
                             <span class="button-label">update</span>
                             </button>
@@ -118,7 +143,7 @@ $(function () {
 
     console.log('APP STARTS', new Date().toLocaleTimeString())
     restoreLoginToken()
-
+    loadUsers();
     $('body').submit(function (ev) {
         ev.preventDefault();
         const target = $(ev.target)
@@ -127,6 +152,7 @@ $(function () {
         if (target.attr('name') === 'signup') {
             signUpForm();
         }
+        //Login form submission
         if (target.attr('name') === 'login') {
             loginForm();
         }
@@ -158,36 +184,26 @@ const restoreLoginToken = () => {
             window.location.href = redirectURL
         }
     } else {
-        const redirectURL = '/login.html'
+        const redirectURL = '/login.html' //needs to be fixed
         if (window.location.pathname !== redirectURL) {
             window.location.href = redirectURL
         }
     }
 };
 
-
-//For Login form
-const loginForm = () => {
-    //POST username and password in exchange for a JWT token
+//loads the list of students for an admin login
+const loadUsers = () => {
     $.ajax({
-        type: "POST",
-        url: '/api/auth/login',
-        data: JSON.stringify({
-            username: $("#username").val(),
-            password: $("#password").val(),
-        }),
-        contentType: 'application/json',
-        success: function success(response) {
-            // response is the JWT of the logged in user
-            APP.LOGIN_INFO = response;
-            saveLoginToken();
-            const redirectURL = APP.LOGIN_INFO.isAdmin ? '/dash-teacher.html' : 'student-dash.html'
-            if (window.location.pathname !== redirectURL) {
-                window.location.href = redirectURL
-            }
-            return
+        type: "GET",
+        url: '/api/users',
+        success: function success(users){
+            for (let i = 0; i < users.length; i++) {
+            if(users[i].isAdmin === false){
+            console.log(users[i].username); //need to show this on dash-teacher
+            } 
         }
-    })
+        }
+    });
 };
 
 //enables cookie removal to logout
@@ -202,7 +218,7 @@ function logoutFeature(){
         $.ajax({
             type: "POST",
             url: '/api/auth/login',
-            data: JSON.stringify({
+      data: JSON.stringify({
                 username: $("#username").val(),
                 password: $("#password").val(),
             }),
