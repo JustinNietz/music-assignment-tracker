@@ -190,6 +190,7 @@ const loginForm = () => {
     })
 };
 
+//enables cookie removal to logout
 function logoutFeature(){
     Cookies.remove('APP_TOKEN');
 }

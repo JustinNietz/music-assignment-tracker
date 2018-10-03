@@ -244,8 +244,11 @@ router.put('/', jsonParser, (req, res) => {
 
 }); 
 
-router.delete("/", jsonParser, (req, res) => {
-
+router.delete("/:id", jsonParser, (req, res) => {
+  User
+  .delete(req.params.Assignments);
+  console.log(`Deleted shopping list item \`${req.params.id}\``);
+  res.status(204).end();
 });
 
 
