@@ -18,25 +18,27 @@
                     </a>
                 </nav>
             
-        <h2 class="Greeting"></h2>
     <div class="row">
         <div class="col-12">
             <h2 class="teacherDash"></h2>
         </div>
     </div>
+
     <form class="assignmentForm" name="js-assignment-list-form">
         <label for="assignment-list-entry">Username</label>
-        <input type="text" id="username" class="forDashboard" name="assignment-list-entry">
+        <select list="students" class="forDashboard showStudents-js" id="username">
+        </select>
+     <!--   <input type="text" id="username" class="forDashboard" > -->
             
         <label for="assignment-list-entry">Assignment Name</label>
-        <input type="text" class="forDashboard" id="js-assignment-name" name="assignment-entry" placeholder="Assignment #1">
+        <input type="text" class="forDashboard" id="js-assignment-name" placeholder="Assignment #1">
           
         <label for="assignment-list-entry">Date</label>
-        <input type="date" class="forDashboard forDates" id="js-assignment-date" name="assignment-list-entry">
+        <input type="date" class="forDashboard forDates" id="js-assignment-date" >
 
-        <button type="submit" class="submitAssignment">Add item</button>
+        <button type="submit" name="assignment-list-entry" class="submitAssignment">Add item</button>
     </form>
-       
+
     <ul class="assignmentList">
       <li class="showAssignment"></li>
     </ul>
