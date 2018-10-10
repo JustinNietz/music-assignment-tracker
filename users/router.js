@@ -12,6 +12,7 @@ const jsonParser = bodyParser.json();
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
+const uuidv4 = require('uuid/v4');
 
 // Post to register a new user
 
@@ -160,6 +161,7 @@ router.post('/:id', jsonParser, jwtAuth, (req, res) => {
   .findById(id)
   .then(user => {
     const assignment = {}; 
+    assignment.id =  req.body.uuidv4();
     assignment.assignmentName = req.body.assignmentName;
     assignment.assignmentDate = req.body.assignmentDate;
     console.log(user);
@@ -209,6 +211,7 @@ router.put('/:id', jsonParser, (req, res) => {
     });
   }
 
+
   const updated = {};
   const updateableFields = ['Assignments'];
   updateableFields.forEach(field => {
@@ -216,11 +219,11 @@ router.put('/:id', jsonParser, (req, res) => {
       updated[field] = req.body[field];
     }
   });
-
+  
   User
     .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
     .then(updatedPost => res.status(204).end())
-    .catch(err => res.status(500).json({ message: 'Something went wrong' }));
+    .catch(err => res.status(500).json({ message: 'Something went wrong' })); 
 });
 
 router.put('/', jsonParser, (req, res) => {
@@ -247,15 +250,18 @@ router.put('/', jsonParser, (req, res) => {
 
 //delete will delete ONE assignment only at a time HTTP DELETE
 router.delete("/:id", jsonParser, (req, res) => {
+  const deleted = {};
+  const deletedFields = ['Assignments'];
+  deletedFields.forEach(field => {
+    if (field in req.body) {
+      deleted[field] = req.body[field];
+    }
+  });
+/*
   User
-    .deleteOne(req.params.Assignments)
-    .then(() => {
-      res.status(204).json({ message: 'success' });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'something went terribly wrong' });
-    });
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+    .then(updatedPost => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Something went wrong' }));*/
 });
 
 

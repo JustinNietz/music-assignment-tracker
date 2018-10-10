@@ -68,7 +68,9 @@ $(function () {
     $('body').submit(function (ev) {
         ev.preventDefault();
         const target = $(ev.target)
-
+$('body').on('click', '.assignment-item-delete', ev =>{
+    alert('yay');
+})
         //Adding list item
         if (target.attr('name') === 'js-assignment-list-form') {
             console.log('You clicked ADD item!')
