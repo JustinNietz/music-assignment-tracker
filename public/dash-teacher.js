@@ -22,6 +22,7 @@ const handleAddItem = () => {
                             Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
                         },
                         success: function createList(userObj) {
+
                             $('.showAssignment').empty();
                          
                             $('.showAssignment').append(`<h3>${userObj.username}</h3>`);
@@ -30,7 +31,7 @@ const handleAddItem = () => {
                             <li>
                             <span>Assignment: <b class="assignmentColor">${userObj.Assignments[j].assignmentName}</b> Due Date: <b class="assignmentColor">${userObj.Assignments[j].assignmentDate}</b></span>
                             <button class="assignment-item-update button-label">Edit</button>
-                            <button class="assignment-item-delete button-label">Delete</button>
+                            <button class="assignment-item-delete button-label" data-id="${userObj.Assignments[j].id}">Delete</button>
                             </li>`);
                             }
                         },
@@ -73,14 +74,15 @@ $('body').on('click', '.assignment-item-delete', ev =>{
         type: "GET",
         url: '/api/users',
         success: function success(users) {
+            console.log('ID', $(ev.target).attr('data-id'))
             for (let i = 0; i < users.length; i++) {
                 if (users[i].username === $("#username").val() && users[i].isAdmin === false) {
                     // Then, POST an assignment of a specific user by id
                     $.ajax({
                         type: "PUT",
                         url: '/api/users/' + users[i].id,
-                        data: JSON.stringify({
-                            id: users[i].id, 
+                        data: JSON.stringify({                            
+                            userID: users[i].id, 
                             assignmentName: "World Hell2o",
                             assignmentDate: "2018-10-10"
                         }),
@@ -89,7 +91,7 @@ $('body').on('click', '.assignment-item-delete', ev =>{
                             Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
                         },
                         success: function createList(userObj) {
-                            debugger
+                            // debugger
                         },
                         error: function error() {
                             console.log('An error has occured!');
