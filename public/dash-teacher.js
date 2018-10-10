@@ -69,7 +69,38 @@ $(function () {
         ev.preventDefault();
         const target = $(ev.target)
 $('body').on('click', '.assignment-item-delete', ev =>{
-    alert('yay');
+    $.ajax({
+        type: "GET",
+        url: '/api/users',
+        success: function success(users) {
+            for (let i = 0; i < users.length; i++) {
+                if (users[i].username === $("#username").val() && users[i].isAdmin === false) {
+                    // Then, POST an assignment of a specific user by id
+                    $.ajax({
+                        type: "PUT",
+                        url: '/api/users/' + users[i].id,
+                        data: JSON.stringify({
+                            id: users[i].id, 
+                            assignmentName: "World Hell2o",
+                            assignmentDate: "2018-10-10"
+                        }),
+                        
+                        headers: {
+                            Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
+                        },
+                        success: function createList(userObj) {
+                            debugger
+                        },
+                        error: function error() {
+                            console.log('An error has occured!');
+                        },
+                        contentType: 'application/json'
+                    })
+                  
+            }
+        }
+       }
+    });
 })
         //Adding list item
         if (target.attr('name') === 'js-assignment-list-form') {

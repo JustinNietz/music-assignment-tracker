@@ -161,7 +161,7 @@ router.post('/:id', jsonParser, jwtAuth, (req, res) => {
   .findById(id)
   .then(user => {
     const assignment = {}; 
-    assignment.id =  req.body.uuidv4();
+    assignment.id =  uuidv4();
     assignment.assignmentName = req.body.assignmentName;
     assignment.assignmentDate = req.body.assignmentDate;
     console.log(user);
@@ -219,7 +219,7 @@ router.put('/:id', jsonParser, (req, res) => {
       updated[field] = req.body[field];
     }
   });
-  
+  console.log(req.params.id);
   User
     .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
     .then(updatedPost => res.status(204).end())
