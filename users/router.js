@@ -205,25 +205,30 @@ router.get('/:id', (req, res) => {
 
 //update will update ONE assignment at a time
 router.put('/:id', jsonParser, (req, res) => {
-  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
-    res.status(400).json({
-      error: 'Request path id and request body id values must match'
-    });
-  }
-
-
-  const updated = {};
-  const updateableFields = ['Assignments'];
-  updateableFields.forEach(field => {
-    if (field in req.body) {
-      updated[field] = req.body[field];
+  const requiredFields = ['Assignments'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
     }
-  });
-  console.log(req.params.id);
+  }
+  if (req.params.id !== req.body.id) {
+    const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+    console.error(message);
+    return res.status(400).send(message);
+  }
+  console.log(`Updating item \`${req.params.id}\``);
   User
-    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedPost => res.status(204).end())
-    .catch(err => res.status(500).json({ message: 'Something went wrong' })); 
+  .update({
+    
+    id: req.params.Assignments.id,
+    assignmentName: req.body.asignmentName,
+    assignmentDate: req.body.assignmentDate
+    
+  });
+  res.status(204).end();
 });
 
 router.put('/', jsonParser, (req, res) => {
