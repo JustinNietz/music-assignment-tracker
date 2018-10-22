@@ -182,6 +182,7 @@ router.post('/:id', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.get('/', (req, res) => {
+
   return User
     .find()
     .then(users => res.json(users.map(user => user.serialize())))
@@ -189,10 +190,11 @@ router.get('/', (req, res) => {
       console.error(err);
       res.status(500).json({ error: 'something went horribly awry' });
     });
-    
+ 
 });
 
 router.get('/:id', (req, res) => {
+
   return User
     .findById(req.params.id)
     .then(user => res.json(user.serialize()))
@@ -204,8 +206,8 @@ router.get('/:id', (req, res) => {
 });
 
 //update will update ONE assignment at a time
-router.put('/:id', jsonParser, (req, res) => {
-  const requiredFields = ['Assignments'];
+/*router.put('/', jsonParser, (req, res) => {
+  const requiredFields = ['assignmentName', 'assignmentDate'];
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -214,30 +216,20 @@ router.put('/:id', jsonParser, (req, res) => {
       return res.status(400).send(message);
     }
   }
-  if (req.params.id !== req.body.id) {
+  const updated = {};
+ /* if (req.params.id !== req.body.id) {
     const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
     console.error(message);
     return res.status(400).send(message);
-  }
+  } 
   console.log(`Updating item \`${req.params.id}\``);
   User
-  .update({
-    
-    id: req.params.Assignments.id,
-    assignmentName: req.body.asignmentName,
-    assignmentDate: req.body.assignmentDate
-    
-  });
+  .updateOne(req.params.assignmentName, { $set: updated }, { new: true });
+ console.log(`Updated name is ${req.body.assignmentName}!`);
   res.status(204).end();
 });
-
-router.put('/', jsonParser, (req, res) => {
-  if (!(req.params.Assignments  === req.body.Assigments)) {
-    res.status(400).json({
-      error: 'Must change all'
-    });
-  }
-
+*/
+router.put('/:id', jsonParser, (req, res) => {
   const updated = {};
   const updateableFields = ['Assignments'];
   updateableFields.forEach(field => {
@@ -246,11 +238,25 @@ router.put('/', jsonParser, (req, res) => {
     }
   });
 
-  User
-    .updateMany(req.params.Assignments, { $set: updated }, { new: true })
-    .then(updatedPost => res.status(204).end())
-    .catch(err => res.status(500).json({ message: 'Something went wrong' })); 
+  for(let i = 0; i < req.body.Assignments.length; i++){
+    console.log(req.body.Assignments[i].id)
 
+    for(let j = 0; j < updated.Assignments.length; j++){
+      console.log(updated)
+      console.log(updated.Assignments[j].id)
+      if(req.body.Assignments[i].id === updated.Assignments[j].id){
+        User
+        .findById(req.params.id)
+        .findOneAndUpdate(req.params.Assignments, {$set: updated}, { new: true })
+        .then(updatedPost => res.status(204).end())
+        .catch(err => res.status(500).json({ message: 'Something went wrong' })); 
+      }
+    }
+
+  }
+
+
+    
 }); 
 
 //delete will delete ONE assignment only at a time HTTP DELETE

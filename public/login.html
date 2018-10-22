@@ -24,13 +24,13 @@
             <form name="login" class='signup-form' action="/api/auth/login" method='post'>
                 <legend>Login</legend>
                 <fieldset name="login">
-
+                    <p class="js-errorIncorrect"></p>
                     <label for="username">Username</label><br>
                     <input type="username" name='username' class="forForm" id='username' /><br>
 
                     <label for="lastName">Password</label><br>
                     <input type="password" name='password' class="forForm" id='password' /><br>
-                    <p class="js-errorIncorrect"></p>
+                    
                     <button class="formButton" type='submit'><b>Login</b></button>
                 </fieldset>
             </form>

@@ -87,6 +87,9 @@ const loginForm = () => {
                 window.location.href = redirectURL
             }
             return
+        },
+        error: function error(err){
+            $('.js-errorIncorrect').html('Username or Password is incorrect!');
         }
     })
 };

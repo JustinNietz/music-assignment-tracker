@@ -69,7 +69,7 @@ $(function () {
     $('body').submit(function (ev) {
         ev.preventDefault();
         const target = $(ev.target)
-$('body').on('click', '.assignment-item-delete', ev =>{
+    $('body').on('click', '.assignment-item-delete', ev =>{
     $.ajax({
         type: "GET",
         url: '/api/users',
@@ -81,17 +81,19 @@ $('body').on('click', '.assignment-item-delete', ev =>{
                     $.ajax({
                         type: "PUT",
                         url: '/api/users/' + users[i].id,
-                        data: JSON.stringify({                            
+                        data: JSON.stringify({ 
+                            Assignments: [{                           
                             userID: users[i].id, 
                             assignmentName: "World Hell2o",
                             assignmentDate: "2018-10-10"
+                            }]
                         }),
                         
                         headers: {
                             Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
                         },
                         success: function createList(userObj) {
-                            // debugger
+                            console.log(users[i].userId);
                         },
                         error: function error() {
                             console.log('An error has occured!');
