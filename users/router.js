@@ -281,10 +281,11 @@ router.put('/:userID', jsonParser, async (req, res) => {
           .then(updatedPost => res.status(204).end())
           .catch(err => res.status(500).json({ message: 'Something went wrong' }));
       }
-    } */
-
+    } 
+    
   }
-
+  
+  */
 
 
 });

@@ -119,7 +119,10 @@ function setupEditButtons() {
         const userObj = getUserByID(userID)
         const assgnObj = getAssignmentByID(userObj, assgnID)
         assgnObj.assignmentName = assgnObj.assignmentName + ' * '
-        saveAssignment(userID, assgnObj)
+        saveAssignment(userID, assgnObj).then(newUserObj => {
+            userObj.Assignments = newUserObj.Assignments
+            displayAssignments(userObj)            
+        })
     })
 }
 
