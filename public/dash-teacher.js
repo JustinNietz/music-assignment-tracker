@@ -69,7 +69,7 @@ $(function () {
     $('body').submit(function (ev) {
         ev.preventDefault();
         const target = $(ev.target)
-    $('body').on('click', '.assignment-item-delete', ev =>{
+    $('body').on('click', '.assignment-item-update', ev =>{
     $.ajax({
         type: "GET",
         url: '/api/users',
@@ -78,6 +78,7 @@ $(function () {
             for (let i = 0; i < users.length; i++) {
                 if (users[i].username === $("#username").val() && users[i].isAdmin === false) {
                     // Then, POST an assignment of a specific user by id
+                    console.log(users[i].Assignments);
                     $.ajax({
                         type: "PUT",
                         url: '/api/users/' + users[i].id,
