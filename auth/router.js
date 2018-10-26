@@ -21,6 +21,7 @@ router.use(bodyParser.json());
 router.post('/login', localAuth, (req, res) => {
   const authToken = createAuthToken(req.user.serialize());
   res.json({
+    username:req.user.username,
     authToken,
     isAdmin: req.user.isAdmin
   });

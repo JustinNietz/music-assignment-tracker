@@ -147,18 +147,16 @@ router.post('/', jsonParser, (req, res) => {
     
 });
 
-router.post('/:id', jsonParser, jwtAuth, (req, res) => {
-  const id = req.body.id;
+router.post('/createassignment/:userID', jsonParser, jwtAuth, (req, res) => {
+  const userID = req.params.userID;
   const {user} = req
   console.log(`User ${user.username} is POSTing as ${user.isAdmin?'admin':'student'}`)
 
   if(!user.isAdmin){
     return res.status(401).json({message:'You must be a teacher'})
   }
-
-
   User
-  .findById(id)
+  .findById(userID)
   .then(user => {
     const assignment = {}; 
     assignment.id =  uuidv4();
@@ -168,7 +166,7 @@ router.post('/:id', jsonParser, jwtAuth, (req, res) => {
     user.Assignments.push(assignment);
     console.log(user);
     User
-    .findByIdAndUpdate(id, user, {new: true})
+    .findByIdAndUpdate(userID, user, {new: true})
     .then(updatedUser => {
       res.status(200).json(updatedUser.serialize())
     })
@@ -244,6 +242,7 @@ router.put('/:id', jsonParser, (req, res) => {
     for(let j = 0; j < updated.Assignments.length; j++){
       console.log(updated)
       console.log(updated.Assignments[j].id)
+
       if(req.body.Assignments[i].id === updated.Assignments[j].id){
         User
         .findById(req.params.id)
