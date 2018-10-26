@@ -4,7 +4,7 @@ const passport = require('passport');
 const { router: authRouter, localStrategy, jwtStrategy } = require('../auth');
 const bodyParser = require('body-parser');
 
-const {User} = require('./models');
+const { User } = require('./models');
 
 const router = express.Router();
 
@@ -30,12 +30,12 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-// check that all fields are strings
+  // check that all fields are strings
   const stringFields = ['username', 'password', 'firstName', 'lastName'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
   );
- 
+
   if (nonStringField) {
     return res.status(422).json({
       code: 422,
@@ -81,12 +81,12 @@ router.post('/', jsonParser, (req, res) => {
   const tooSmallField = Object.keys(sizedFields).find(
     field =>
       'min' in sizedFields[field] &&
-            req.body[field].trim().length < sizedFields[field].min
+      req.body[field].trim().length < sizedFields[field].min
   );
   const tooLargeField = Object.keys(sizedFields).find(
     field =>
       'max' in sizedFields[field] &&
-            req.body[field].trim().length > sizedFields[field].max
+      req.body[field].trim().length > sizedFields[field].max
   );
 
   if (tooSmallField || tooLargeField) {
@@ -102,14 +102,14 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  let {username, password, firstName = '', lastName = '', isAdmin = false} = req.body;
+  let { username, password, firstName = '', lastName = '', isAdmin = false } = req.body;
   // Username and password come in pre-trimmed, otherwise we throw an error
   // before this
   firstName = firstName.trim();
   lastName = lastName.trim();
   isAdmin = isAdmin.trim();
- 
-  return User.find({username})
+
+  return User.find({ username })
     .count()
     .then(count => {
       if (count > 0) {
@@ -142,43 +142,41 @@ router.post('/', jsonParser, (req, res) => {
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({code: 500, message: 'Internal server error'});
+      res.status(500).json({ code: 500, message: 'Internal server error' });
     });
-    
+
 });
 
-router.post('/:id', jsonParser, jwtAuth, (req, res) => {
-  const id = req.body.id;
-  const {user} = req
-  console.log(`User ${user.username} is POSTing as ${user.isAdmin?'admin':'student'}`)
+router.post('/createassignment/:userID', jsonParser, jwtAuth, (req, res) => {
+  const userID = req.params.userID;
+  const { user } = req
+  console.log(`User ${user.username} is POSTing as ${user.isAdmin ? 'admin' : 'student'}`)
 
-  if(!user.isAdmin){
-    return res.status(401).json({message:'You must be a teacher'})
+  if (!user.isAdmin) {
+    return res.status(401).json({ message: 'You must be a teacher' })
   }
-
-
   User
-  .findById(id)
-  .then(user => {
-    const assignment = {}; 
-    assignment.id =  uuidv4();
-    assignment.assignmentName = req.body.assignmentName;
-    assignment.assignmentDate = req.body.assignmentDate;
-    console.log(user);
-    user.Assignments.push(assignment);
-    console.log(user);
-    User
-    .findByIdAndUpdate(id, user, {new: true})
-    .then(updatedUser => {
-      res.status(200).json(updatedUser.serialize())
+    .findById(userID)
+    .then(user => {
+      const assignment = {};
+      assignment.id = uuidv4();
+      assignment.assignmentName = req.body.assignmentName;
+      assignment.assignmentDate = req.body.assignmentDate;
+      console.log(user);
+      user.Assignments.push(assignment);
+      console.log(user);
+      User
+        .findByIdAndUpdate(userID, user, { new: true })
+        .then(updatedUser => {
+          res.status(200).json(updatedUser.serialize())
+        })
+
     })
-    
-  })
-  .catch(err => {
-    console.error(err);
-    res.status(500).json({ error: 'something went horribly awry' });
-  });
-   
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'something went horribly awry' });
+    });
+
 });
 
 router.get('/', (req, res) => {
@@ -190,7 +188,7 @@ router.get('/', (req, res) => {
       console.error(err);
       res.status(500).json({ error: 'something went horribly awry' });
     });
- 
+
 });
 
 router.get('/:id', (req, res) => {
@@ -202,7 +200,7 @@ router.get('/:id', (req, res) => {
       console.error(err);
       res.status(500).json({ error: 'something went horribly awry' });
     });
-    
+
 });
 
 //update will update ONE assignment at a time
@@ -229,8 +227,39 @@ router.get('/:id', (req, res) => {
   res.status(204).end();
 });
 */
-router.put('/:id', jsonParser, (req, res) => {
-  const updated = {};
+
+function getAssignmentByID(userObj, id) {
+  const assgns = userObj.Assignments
+  const filtered = assgns.filter(a => a.id === id)
+  if (!filtered.length) {
+    return null
+  }
+  return filtered[0]
+}
+
+router.put('/:userID', jsonParser, async (req, res) => {
+
+  const userID = req.params.userID
+  const user = await User.findById(userID)
+  if (!user) {
+    return res.status(500).json({ message: 'No such user' })
+  }
+  console.log('A is:', req.body.assignment, user.Assignments)
+
+  const newAssgn = req.body.assignment
+  const prevAssgnIndex = user.Assignments.findIndex(a => a.id === newAssgn.id)
+  console.log('A found at index:', prevAssgnIndex)
+
+  user.Assignments[prevAssgnIndex] = newAssgn
+
+  const updatedUser = await User.findByIdAndUpdate(
+    { '_id': userID },
+    { $set: { Assignments: user.Assignments } },
+    { new: true } //tell mongoose to return the updated document 
+  )
+  res.status(200).json(updatedUser.serialize())
+
+/*   const updated = {};
   const updateableFields = ['Assignments'];
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -238,26 +267,28 @@ router.put('/:id', jsonParser, (req, res) => {
     }
   });
 
-  for(let i = 0; i < req.body.Assignments.length; i++){
+  for (let i = 0; i < req.body.Assignments.length; i++) {
     console.log(req.body.Assignments[i].id)
 
-    for(let j = 0; j < updated.Assignments.length; j++){
+    for (let j = 0; j < updated.Assignments.length; j++) {
       console.log(updated)
       console.log(updated.Assignments[j].id)
-      if(req.body.Assignments[i].id === updated.Assignments[j].id){
+
+      if (req.body.Assignments[i].id === updated.Assignments[j].id) {
         User
-        .findById(req.params.id)
-        .findOneAndUpdate(req.params.Assignments, {$set: updated}, { new: true })
-        .then(updatedPost => res.status(204).end())
-        .catch(err => res.status(500).json({ message: 'Something went wrong' })); 
+          .findById(req.params.id)
+          .findOneAndUpdate(req.params.Assignments, { $set: updated }, { new: true })
+          .then(updatedPost => res.status(204).end())
+          .catch(err => res.status(500).json({ message: 'Something went wrong' }));
       }
-    }
-
-  }
-
-
+    } 
     
-}); 
+  }
+  
+  */
+
+
+});
 
 //delete will delete ONE assignment only at a time HTTP DELETE
 router.delete("/:id", jsonParser, (req, res) => {
@@ -268,11 +299,11 @@ router.delete("/:id", jsonParser, (req, res) => {
       deleted[field] = req.body[field];
     }
   });
-/*
-  User
-    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedPost => res.status(204).end())
-    .catch(err => res.status(500).json({ message: 'Something went wrong' }));*/
+  /*
+    User
+      .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+      .then(updatedPost => res.status(204).end())
+      .catch(err => res.status(500).json({ message: 'Something went wrong' }));*/
 });
 
 
@@ -286,4 +317,4 @@ router.delete("/:id", jsonParser, (req, res) => {
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });  */
 
-module.exports = {router};
+module.exports = { router };
