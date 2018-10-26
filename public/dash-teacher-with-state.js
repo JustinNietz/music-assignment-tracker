@@ -18,6 +18,15 @@ function getStudents() {
     return STATE.users.filter(user => !user.isAdmin)
 }
 
+function getAssignmentByID(userObj, id) {
+    const assgns = userObj.Assignments
+    const filtered = assgns.filter(a => a.id === id)
+    if (!filtered.length) {
+        return null
+    }
+    return filtered[0]
+}
+
 function getUserByID(id) {
     const filtered = STATE.users.filter(user => user.id === id)
     if (!filtered.length) {
@@ -54,7 +63,7 @@ function setupAddButton() {
 
 function populateSelect() {
     const students = getStudents()
-    const list = [];
+    const list = [`<option value="">Please select </option>`];
     for (let i = 0; i < students.length; i++) {
         list.push(`<option value="${students[i].id}">${students[i].username}</option>`);
     }
@@ -80,16 +89,44 @@ function displayAssignments(userObj) {
         $('.showAssignment').append(`
     <li>
     <span>Assignment: <b class="assignmentColor">${userObj.Assignments[j].assignmentName}</b> Due Date: <b class="assignmentColor">${userObj.Assignments[j].assignmentDate}</b></span>
-    <button class="assignment-item-update button-label" data-id="${userObj.Assignments[j].id}">Edit</button>
-    <button class="assignment-item-delete button-label" data-id="${userObj.Assignments[j].id}">Delete</button>
+    <button class="assignment-item-update button-label" 
+    data-user-id="${userObj.id}" 
+    data-id="${userObj.Assignments[j].id}">Edit</button>
+    <button class="assignment-item-delete button-label" 
+    data-user-id="${userObj.id}" 
+    data-id="${userObj.Assignments[j].id}">Delete</button>
     </li>`);
     }
 }
 
+function saveAssignment(userID, assgnObj) {
+    return $.ajax({
+        contentType: 'application/json',
+        type: "PUT",
+        url: '/api/users/' + userID,
+        data: JSON.stringify({ assignment: assgnObj }),
+        headers: {
+            Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
+        },
+    })
+}
+
+function setupEditButtons() {
+    $('body').on('click', '.assignment-item-update', ev => {
+        ev.preventDefault()
+        const userID = $(ev.target).attr('data-user-id')
+        const assgnID = $(ev.target).attr('data-id')
+        const userObj = getUserByID(userID)
+        const assgnObj = getAssignmentByID(userObj, assgnID)
+        assgnObj.assignmentName = assgnObj.assignmentName + ' * '
+        saveAssignment(userID, assgnObj)
+    })
+}
 
 $(() => {
     loadUsers().then(() => {
         setupAddButton()
+        setupEditButtons()
         setupUserSelect()
         populateSelect()
 
