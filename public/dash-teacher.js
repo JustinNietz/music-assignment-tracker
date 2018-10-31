@@ -72,7 +72,7 @@ $(function () {
         $('body').on('click', '.assignment-item-update', ev => {
 
             
-            $.ajax({
+       /*     $.ajax({
                 type: "GET",
                 url: '/api/users',
                 success: function success(users) {
@@ -108,7 +108,7 @@ $(function () {
                         }
                     }
                 }
-            });
+            }); */
         })
         //Adding list item
         if (target.attr('name') === 'js-assignment-list-form') {

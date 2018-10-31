@@ -43,21 +43,24 @@ function addAssignment(userID, data) {
         headers: {
             Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
         },
+        contentType: 'application/json'
     })
 }
 
 function setupAddButton() {
     $('body').on('click', '.submitAssignment', ev => {
         ev.preventDefault()
-
         //TODO validate here
         const data = {
             assignmentName: $("#js-assignment-name").val(),
             assignmentDate: $("#js-assignment-date").val()
         }
         const userID = $('#username').val()
+        console.log('You clicked ADD');
         addAssignment(userID, data)
-
+        const userObj = getUserByID(userID)
+        displayAssignments(userObj)
+       
     })
 }
 
@@ -72,10 +75,11 @@ function populateSelect() {
 
 function setupUserSelect() {
     $('body').on('change', '#username', ev => {
-        ev.preventDefault()
+        
         const userID = $('#username').val()
         const userObj = getUserByID(userID)
         displayAssignments(userObj)
+        $(".showStudents-js").show();
     })
 }
 
@@ -129,8 +133,8 @@ function setupEditButtons() {
 $(() => {
     loadUsers().then(() => {
         setupAddButton()
-        setupEditButtons()
         setupUserSelect()
+        setupEditButtons()
         populateSelect()
 
         //displayAssignments()
