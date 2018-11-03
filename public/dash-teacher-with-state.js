@@ -44,7 +44,7 @@ function addAssignment(userID, data) {
         headers: {
             Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
         },
-        success: function display(userObj){
+        success: function display(userObj) {
             displayAssignments(userObj)
         },
         contentType: 'application/json'
@@ -53,14 +53,14 @@ function addAssignment(userID, data) {
 
 function setupAddButton() {
     $('body').on('click', '.submitAssignment', ev => {
-        
+
         //TODO validate here
         const data = {
             assignmentName: $("#js-assignment-name").val(),
             assignmentDate: $("#js-assignment-date").val()
         }
         const userID = $('#username').val()
-        addAssignment(userID, data)       
+        addAssignment(userID, data)
     })
 }
 
@@ -75,7 +75,7 @@ function populateSelect() {
 
 function setupUserSelect() {
     $('body').on('change', '#username', ev => {
-        
+
         const userID = $('#username').val()
         const userObj = getUserByID(userID)
         displayAssignments(userObj)
@@ -90,17 +90,48 @@ function displayAssignments(userObj) {
 
     $('.showAssignment').append(`<h3>${userObj.username}</h3>`);
     for (let j = 0; j < userObj.Assignments.length; j++) {
+        const assgn = userObj.Assignments[j]
+        const formNameID = `assignment-list-entry-${assgn.id}`
+        const formDateID = `assignment-list-entry-${assgn.id}`
         $('.showAssignment').append(`
-    <li>
+    <li
+    data-user-id="${userObj.id}" 
+    data-id="${assgn.id}"
+    >
     <span>Assignment: <b class="assignmentColor">${userObj.Assignments[j].assignmentName}</b> Due Date: <b class="assignmentColor">${userObj.Assignments[j].assignmentDate}</b></span>
-    <button class="assignment-item-update button-label" 
-    data-user-id="${userObj.id}" 
-    data-id="${userObj.Assignments[j].id}">Edit</button>
-    <button class="assignment-item-delete button-label" 
-    data-user-id="${userObj.id}" 
-    data-id="${userObj.Assignments[j].id}">Delete</button>
+    
+    <button class="assignment-item-delete button-label">Delete</button>
+    <button class="js-show-hide-edit-form button-label">Edit</button>    
+    <form class="js-hidden">
+        <label for="${formNameID}">Assignment Name</label>
+        <input type="text" class="js-edit-name forDashboard" id="${formNameID}" placeholder="Assignment #1">      
+        <label for="${formDateID}">Date</label>
+        <input type="date" class="js-edit-date forDashboard forDates" id="${formDateID}">
+        <button class="assignment-item-update button-label">Save</button>
+    </form>    
+
     </li>`);
     }
+}
+
+function setupShowHideEditForm() {
+    $('body').on('click', '.js-show-hide-edit-form', ev => {
+        ev.preventDefault()
+        const btn$ = $(event.target)
+        const form$ = btn$.parent().find('form')
+        form$.toggleClass('js-hidden')
+
+        const userID = $(btn$).parents('li').attr('data-user-id')
+        const assgnID = $(btn$).parents('li').attr('data-id')
+        const userObj = getUserByID(userID)
+        const assgnObj = getAssignmentByID(userObj, assgnID)
+
+        form$.find('.js-edit-name').val(assgnObj.assignmentName)
+        form$.find('.js-edit-date').val(assgnObj.assignmentDate)
+
+
+        // debugger
+    })
 }
 
 function saveAssignment(userID, assgnObj) {
@@ -114,36 +145,43 @@ function saveAssignment(userID, assgnObj) {
         },
     })
 }
-function clickedEditButton(){
+function clickedEditButton() {
     $('body').on('click', '.assignment-item-update', ev => {
         ev.preventDefault()
         setupEditButtons()
     })
 }
-function setupEditButtons() {
+function setupSaveEditsButtons() {
     $('body').on('click', '.assignment-item-update', ev => {
         ev.preventDefault()
-        const userID = $(ev.target).attr('data-user-id')
-        const assgnID = $(ev.target).attr('data-id')
+        const form$ = $(ev.target).parents('form')
+        const userID = $(ev.target).parents('li').attr('data-user-id')
+        const assgnID = $(ev.target).parents('li').attr('data-id')
         const userObj = getUserByID(userID)
-        const assgnObj = getAssignmentByID(userObj, assgnID)
-        assgnObj.assignmentName = assgnObj.assignmentName + ' edited ' //this needs to be a inputted value
+        const assgnObj = Object.assign({}, getAssignmentByID(userObj, assgnID))
+        const assgnName = form$.find('.js-edit-name').val()
+        const assgnDate = form$.find('.js-edit-date').val()
+        assgnObj.assignmentName = assgnName
+        assgnObj.assignmentDate = assgnDate
+        
+        //assgnObj.assignmentName = assgnObj.assignmentName + ' edited ' //this needs to be a inputted value
         saveAssignment(userID, assgnObj).then(newUserObj => {
             userObj.Assignments = newUserObj.Assignments
-            displayAssignments(userObj)            
+            displayAssignments(userObj)
         })
     })
 }
 
-function setupDeleteButtons(){
+function setupDeleteButtons() {
 
 }
 $(() => {
     loadUsers().then(() => {
         setupAddButton()
         setupUserSelect()
-        setupEditButtons()
+        setupSaveEditsButtons()
         populateSelect()
+        setupShowHideEditForm()
 
         //displayAssignments()
         // debugger

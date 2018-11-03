@@ -342,3 +342,6 @@ label {
     display: none;
   }
   
+.js-hidden{
+  display:none;
+}
