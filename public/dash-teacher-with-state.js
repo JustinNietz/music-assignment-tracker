@@ -36,6 +36,7 @@ function getUserByID(id) {
 }
 
 function addAssignment(userID, data) {
+    const userObj = getUserByID(userID)
     return $.ajax({
         type: "POST",
         url: '/api/users/createassignment/' + userID,
@@ -43,24 +44,23 @@ function addAssignment(userID, data) {
         headers: {
             Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
         },
+        success: function display(userObj){
+            displayAssignments(userObj)
+        },
         contentType: 'application/json'
     })
 }
 
 function setupAddButton() {
     $('body').on('click', '.submitAssignment', ev => {
-        ev.preventDefault()
+        
         //TODO validate here
         const data = {
             assignmentName: $("#js-assignment-name").val(),
             assignmentDate: $("#js-assignment-date").val()
         }
         const userID = $('#username').val()
-        console.log('You clicked ADD');
-        addAssignment(userID, data)
-        const userObj = getUserByID(userID)
-        displayAssignments(userObj)
-       
+        addAssignment(userID, data)       
     })
 }
 
@@ -114,7 +114,12 @@ function saveAssignment(userID, assgnObj) {
         },
     })
 }
-
+function clickedEditButton(){
+    $('body').on('click', '.assignment-item-update', ev => {
+        ev.preventDefault()
+        setupEditButtons()
+    })
+}
 function setupEditButtons() {
     $('body').on('click', '.assignment-item-update', ev => {
         ev.preventDefault()
@@ -122,7 +127,7 @@ function setupEditButtons() {
         const assgnID = $(ev.target).attr('data-id')
         const userObj = getUserByID(userID)
         const assgnObj = getAssignmentByID(userObj, assgnID)
-        assgnObj.assignmentName = assgnObj.assignmentName + ' * '
+        assgnObj.assignmentName = assgnObj.assignmentName + ' edited ' //this needs to be a inputted value
         saveAssignment(userID, assgnObj).then(newUserObj => {
             userObj.Assignments = newUserObj.Assignments
             displayAssignments(userObj)            
@@ -130,6 +135,9 @@ function setupEditButtons() {
     })
 }
 
+function setupDeleteButtons(){
+
+}
 $(() => {
     loadUsers().then(() => {
         setupAddButton()
@@ -142,3 +150,6 @@ $(() => {
     })
 })
 
+
+// finish edit button
+//make delete work
