@@ -252,42 +252,15 @@ router.put('/:userID', jsonParser, async (req, res) => {
 
   user.Assignments[prevAssgnIndex] = newAssgn
 
+  // a DELETE would do 
+  // user.Assignments.splice(prevAssgnIndex, 1)
+
   const updatedUser = await User.findByIdAndUpdate(
     { '_id': userID },
     { $set: { Assignments: user.Assignments } },
     { new: true } //tell mongoose to return the updated document 
   )
   res.status(200).json(updatedUser.serialize())
-
-/*   const updated = {};
-  const updateableFields = ['Assignments'];
-  updateableFields.forEach(field => {
-    if (field in req.body) {
-      updated[field] = req.body[field];
-    }
-  });
-
-  for (let i = 0; i < req.body.Assignments.length; i++) {
-    console.log(req.body.Assignments[i].id)
-
-    for (let j = 0; j < updated.Assignments.length; j++) {
-      console.log(updated)
-      console.log(updated.Assignments[j].id)
-
-      if (req.body.Assignments[i].id === updated.Assignments[j].id) {
-        User
-          .findById(req.params.id)
-          .findOneAndUpdate(req.params.Assignments, { $set: updated }, { new: true })
-          .then(updatedPost => res.status(204).end())
-          .catch(err => res.status(500).json({ message: 'Something went wrong' }));
-      }
-    } 
-    
-  }
-  
-  */
-
-
 });
 
 //delete will delete ONE assignment only at a time HTTP DELETE
