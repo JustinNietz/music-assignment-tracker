@@ -59,7 +59,7 @@ describe('Auth endpoints', function () {
           expect(res).to.have.status(400);
         });
     });
-    it('Should reject requests with incorrect usernames', function () {
+    it.only('Should reject requests with incorrect usernames', function () {
       return chai
         .request(app)
         .post('/api/auth/login')
@@ -76,7 +76,7 @@ describe('Auth endpoints', function () {
           expect(res).to.have.status(401);
         });
     });
-    it('Should reject requests with incorrect passwords', function () {
+    it.only('Should reject requests with incorrect passwords', function () {
       return chai
         .request(app)
         .post('/api/auth/login')
