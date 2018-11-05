@@ -172,8 +172,36 @@ function setupSaveEditsButtons() {
     })
 }
 
+function saveDeletedAssignment(userID, assgnObj){
+    return $.ajax({
+        contentType: 'application/json',
+        type: "DELETE",
+        url: '/api/users/' + userID,
+        data: JSON.stringify({ assignment: assgnObj }),
+        headers: {
+            Authorization: `Bearer ${APP.LOGIN_INFO.authToken}`
+        },
+    })
+}
 function setupDeleteButtons() {
-
+    $('body').on('click', '.assignment-item-delete', ev => {
+        ev.preventDefault()
+        const form$ = $(ev.target).parents('form')
+        const userID = $(ev.target).parents('li').attr('data-user-id')
+        const assgnID = $(ev.target).parents('li').attr('data-id')
+        const userObj = getUserByID(userID)
+        const assgnObj = Object.assign({}, getAssignmentByID(userObj, assgnID))
+        const assgnName = form$.find('.js-edit-name').val()
+        const assgnDate = form$.find('.js-edit-date').val()
+        assgnObj.assignmentName = assgnName
+        assgnObj.assignmentDate = assgnDate
+        
+        //assgnObj.assignmentName = assgnObj.assignmentName + ' edited ' //this needs to be a inputted value
+        saveDeletedAssignment(userID, assgnObj).then(newUserObj => {
+            userObj.Assignments = newUserObj.Assignments
+            displayAssignments(userObj)
+        })
+    })
 }
 $(() => {
     loadUsers().then(() => {
@@ -182,6 +210,7 @@ $(() => {
         setupSaveEditsButtons()
         populateSelect()
         setupShowHideEditForm()
+        setupDeleteButtons()
 
         //displayAssignments()
         // debugger

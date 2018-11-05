@@ -264,20 +264,34 @@ router.put('/:userID', jsonParser, async (req, res) => {
 });
 
 //delete will delete ONE assignment only at a time HTTP DELETE
-router.delete("/:id", jsonParser, (req, res) => {
-  const deleted = {};
-  const deletedFields = ['Assignments'];
-  deletedFields.forEach(field => {
-    if (field in req.body) {
-      deleted[field] = req.body[field];
-    }
-  });
+router.delete('/:userID', jsonParser, async (req, res) => {
+
+  const userID = req.params.userID
+  const user = await User.findById(userID)
+  if (!user) {
+    return res.status(500).json({ message: 'No such user' })
+  }
+  console.log('A is:', req.body.assignment, user.Assignments)
+
+  const newAssgn = req.body.assignment
+  const prevAssgnIndex = user.Assignments.findIndex(a => a.id === newAssgn.id)
+  console.log('A found at index:', prevAssgnIndex)
+
+  // a DELETE would do 
+   user.Assignments.splice(prevAssgnIndex, 1)
+
+  const updatedUser = await User.findByIdAndUpdate(
+    { '_id': userID },
+    { $set: { Assignments: user.Assignments } },
+    { new: true } //tell mongoose to return the updated document 
+  )
+  res.status(200).json(updatedUser.serialize())
+});
   /*
     User
       .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
       .then(updatedPost => res.status(204).end())
       .catch(err => res.status(500).json({ message: 'Something went wrong' }));*/
-});
 
 
 // Never expose all your users like below in a prod application
