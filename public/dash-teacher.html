@@ -1,22 +1,22 @@
-<!DOCTYPE=html> 
+<!DOCTYPE=html>
 <html lang="en">
-    <head>
-        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-        <link href="float.css" rel="stylesheet" type="text/css" />
-        <link href="index.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-            <nav role="navigation" class="topnav" id="myTopnav">
-                    <a href="index.html" class="active" onclick="logoutFeature()">Logout</a>
-                    
-                    <!--Add this after finished-->
-                    <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
-                        <i class="fa fa-bars"></i>
-                    </a>
-                </nav>
-            
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+    <link href="float.css" rel="stylesheet" type="text/css" />
+    <link href="index.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <nav role="navigation" class="topnav" id="myTopnav">
+        <a href="index.html" class="active" onclick="logoutFeature()">Logout</a>
+        <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </nav>
+
     <div class="row">
         <div class="col-12">
             <h2 class="teacherDash"></h2>
@@ -24,30 +24,29 @@
     </div>
 
     <form class="assignmentForm" name="js-assignment-list-form">
-        <label for="assignment-list-entry">Username</label>
-        <select list="students" class="forDashboard showStudents-js" id="username">
-        </select>
-     <!--   <input type="text" id="username" class="forDashboard" > -->
-            
-        <label for="assignment-list-entry">Assignment Name</label>
-        <input type="text" class="forDashboard" id="js-assignment-name" placeholder="Assignment #1">
-          
-        <label for="assignment-list-entry">Date</label>
-        <input type="date" class="forDashboard forDates" id="js-assignment-date" >
+        <label for="assignment-list-entry" class="addAssgn">Username: </label>
+        <select list="students" class="forDashboard showStudents-js" id="username"></select>
+        <br>
+        <label for="assignment-list-entry" class="forDates addAssgn">Name: </label>
+        <input type="text" class="forDashboard forDates" id="js-assignment-name" placeholder="Assignment #1">
+        <br>
+        <label for="assignment-list-entry" class="forDates addAssgn">Date: </label>
+        <input type="date" class="forDashboard forDates" id="js-assignment-date">
 
-        <button type="submit" name="assignment-list-entry" class="submitAssignment">Add item</button>
+        <button type="submit" name="assignment-list-entry" class="submitAssignment">Add Assignment</button>
     </form>
 
     <ul class="assignmentList">
-      <li class="showAssignment"></li>
-      <li class="editAssignment"></li>
+        <li class="showAssignment"></li>
+        <li class="editAssignment"></li>
     </ul>
-  </div>  
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
-    <script type="text/javascript" src="index.js"></script>  
-    <script type="text/javascript" src="dash-teacher-with-state.js"></script>  
-    </body>
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="dash-teacher-with-state.js"></script>
+</body>
+
 </html>

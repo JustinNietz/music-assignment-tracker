@@ -6,11 +6,12 @@ body {
   background: url("houndstooth-pattern.png");
 }
   
-/* index.html ONLY */
+/* index.html */
 
 .titleCenterIndex {
     text-align: center;
     padding-top: 25%;
+    font-size: 2em;
 }
 
 i{
@@ -47,6 +48,10 @@ i{
 	top:1px;
 }
 
+ .indexButton {
+  padding-top: 10%;
+}
+
 /* sign-up.html + login.html */
 
 fieldset {
@@ -62,6 +67,7 @@ fieldset {
   margin-left: auto;
   margin-right: auto;
   margin-top: 5%;
+  width: 500px;
 }
 
 legend {
@@ -91,7 +97,6 @@ legend {
   border-bottom: 2px solid black;
 }
 
-
 input[type="radio"]{
   margin-top: 20px;
   margin-right: auto;
@@ -103,8 +108,8 @@ input[type="radio"]{
     margin: 0 auto;
     margin-top: 10px;
     text-align: left;
-   
 }
+
 .formButton {
   display: block;
   width: 100%;
@@ -139,15 +144,6 @@ label {
   font-size: 1.2em;
 }
 
-  /* Error messages */
-
-  .js-errorsUser, .js-errorsPass, .js-errorIncorrect {
-    color: red;
-    text-align: center;
-    font-size: 1.3em;
-  }
-
-
   /* to Login page or Sign up page */
 
   h3 {
@@ -161,14 +157,24 @@ label {
     font-size: 1.3em;
   }
 
-  /* Student Dashboard */
+  /* Error messages */
+
+  .js-errorsUser, .js-errorsPass, .js-errorIncorrect {
+    color: red;
+    text-align: center;
+    font-size: 1.3em;
+  }
+
+
+
+/* Student Dashboard */
 
   .Greeting {
     text-align: center;
     font-size: 1.7em;
   }
 
-  /* Teacher Dashboard */
+/* dash-teacher.html */
 
   .teacherDash {
     font-size: 3em;
@@ -178,29 +184,60 @@ label {
   .forDashboard {
     border-radius: 10px;
     font-size: 25px;
+    background-color: white;
   }
 
   .forDates {
-    margin-top: 10px;
+    margin-top: 30px;
   }
   
   .submitAssignment {
-    display: inline-block;
+    display: block;
     width: 50%;
     height: auto;
-    border: 2px solid grey;
-    padding: 5px;
-    margin-top: 10px;
+    border: 0px;
+    padding: 15px;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;
     font-size: 25px;
+  }
+  
+  .submitAssignment:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #202020), color-stop(1, #5f6362));
+    background:-moz-linear-gradient(top, #696969 5%, #5f6362 100%);
+    background:-webkit-linear-gradient(top, #696969 5%, #202020 100%);
+    background:-o-linear-gradient(top, #696969 5%, #5f6362 100%);
+    background:-ms-linear-gradient(top, #696969 5%, #5f6362 100%);
+    background:linear-gradient(to bottom, #696969 5%, #5f6362 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#202020', endColorstr='#5f6362',GradientType=0);
+    background-color:#474646;
+    color: white;
+  }
+  
+  .submitAssignment:active {
+    position:relative;
+    top:1px;
   }
 
   .assignmentList {
     list-style-type: none;
   }
+
   .showAssignment {
     text-align: center;
     font-size: 20px;
-  
+  }
+
+  .assignmentForm {
+    padding: 2%;
+    text-align: center;
+    background-color: white;
+    margin-left: 15%;
+    margin-right: 15%;
+    border: 0;
+    border-radius: 20px;
   }
 
   .assignmentColor{
@@ -217,45 +254,53 @@ label {
 
   }
 
-/* Desktop/non-mobile grid */
+/* Nav bar */
 
-@media only screen and (min-width: 640px){
+.topnav {
+  overflow: hidden;
+  background-color:grey;
+}
 
-  /* index.html */
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 25px;
+}
 
-  .indexButton {
-    padding-top: 10%;
-  }
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
 
-  .titleCenterIndex {
-    font-size: 2em;
-  }
+.active {
+  color: white;
+}
 
-  /* sign-up.html */
+.topnav .icon {
+  display: none;
+}
 
-  .signup-form {
-    width: 400px;
-  }
-
-  /* login.html */
-
-  /* Teacher Dashboard */
-  
-  .assignmentForm {
-    padding: 30px;
-    text-align: center;
-    background-color: white;
-    margin: 30px;
-    border: 2px solid black;
-    border-radius: 10px;
-   
-  }
+.js-hidden{
+display:none;
 }
 
 /* mobile grid */
-@media only screen and (max-width: 640px){
+@media only screen and (max-width: 575px){
 
   /* index.html */
+
+  .titleCenterIndex {
+    text-align: center;
+    padding-top: 5%;
+  }
+
+  i {
+    font-size: .75em;
+  }
 
   .myButton{
     width: 100%;
@@ -267,13 +312,9 @@ label {
   }
 
   h1 {
-    font-size: 2.8em;
+    font-size: 1.5em;
   }
   
-  i {
-    font-size: 1em;
-  }
-
   /* sign-up.html */
 
   h3 {
@@ -309,6 +350,8 @@ label {
       display: block;
   }
 
+  /* nav bar */
+
   .topnav a:not(:first-child) {display: none;}
   .topnav a.icon {
     float: right;
@@ -329,44 +372,70 @@ label {
   }
 
   .signup-form{
-    width: 80%;
+    width: 85%;
     padding-right: 6%;
     padding-left: 6%;
     padding-top: 6%;
   }
-}
 
-/* Nav bar */
+  /* dash-teacher.html */
 
-
-.topnav {
-    overflow: hidden;
-    background-color:grey;
-  }
-  
-  .topnav a {
-    float: left;
-    display: block;
-    color: #f2f2f2;
+  .assignmentForm {
+    width: 100%;
+    padding: 20px;
     text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+    background-color: white;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    border: 0;
+    border-radius: 20px; 
+  }
+
+  .submitAssignment {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 0px;
+    padding: 15px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;
     font-size: 25px;
   }
-  
-  .topnav a:hover {
-    background-color: #ddd;
-    color: black;
+
+  .addAssgn{
+    float:left;
   }
-  
-  .active {
-    color: white;
+  label {
+    font-size: 1em;
   }
-  
-  .topnav .icon {
-    display: none;
+  .teacherDash {
+    font-size: 1.5em;
+    text-align: center;
   }
-  
-.js-hidden{
-  display:none;
+
+  .forDashboard {
+    border-radius: 10px;
+    font-size: 16px;
+    margin-top: 0;
+  }
+
+  .forDates {
+    margin-top: 20px;
+  }
+
 }
+
+/* need CSS fix on:
+ 1. list of assignments
+ 2. student dashboard
+
+ need fix in general:
+ 1. error messages
+ 2. Passing tests ***
+*/
+
+
+

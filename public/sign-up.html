@@ -13,42 +13,41 @@
   <!--Navigation Bar-->
   <nav role="navigation" class="topnav" id="myTopnav">
     <a href="index.html" class="active">Home</a>
-    <a href="#about">About</a>
-    <!--Add this after finished-->
     <a href="javascript:void(0);" class="icon" onclick="navDropDown()">
       <i class="fa fa-bars"></i>
     </a>
   </nav>
 
   <!--Sign-up Form-->
-  <form name="signup" class='signup-form'>
-    <legend>Get Started</legend>
-    <fieldset name="signup">
+  <main role="main">
+    <form name="signup" class='signup-form'>
+      <legend>Get Started</legend>
+      <fieldset name="signup">
 
-      <label for="firstName">First Name</label><br>
-      <input type="firstName" name='firstName' class="forForm" id='firstName' placeholder='John' /><br>
+        <label for="firstName">First Name</label><br>
+        <input type="firstName" name='firstName' class="forForm" id='firstName' placeholder='John' /><br>
 
-      <label for="lastName">Last Name</label><br>
-      <input type="lastName" name='lastName' class="forForm" id='lastName' placeholder='Doe' /><br>
+        <label for="lastName">Last Name</label><br>
+        <input type="lastName" name='lastName' class="forForm" id='lastName' placeholder='Doe' /><br>
 
-      <label for="username">Username</label><br>
-      <input class="forForm" type="username" name='username' id='username' placeholder='JDoe12' /><br>
-      <p class="js-errorsUser"></p>
+        <label for="username">Username</label><br>
+        <input class="forForm" type="username" name='username' id='username' placeholder='JDoe12' /><br>
+        <p class="js-errorsUser"></p>
 
-      <label for="password">Password</label><br>
-      <input type="password" name='password' class="forForm" id='password' /><br>
-      <p class="js-errorsPass"></p>
+        <label for="password">Password</label><br>
+        <input type="password" name='password' class="forForm" id='password' /><br>
+        <p class="js-errorsPass"></p>
 
-      <label>Teacher or Student?</label><br>
-      <input type="radio" id="isAdminTrue" name='isAdmin' value='true' />
-      <label for="isAdminTrue" class="radioButton">Teacher</label>
-      <input type="radio" id="isAdminFalse" name='isAdmin' value='false' checked />
-      <label for="isAdminFalse" class="radioButton">Student</label>
+        <label>Teacher or Student?</label><br>
+        <input type="radio" id="isAdminTrue" name='isAdmin' value='true' />
+        <label for="isAdminTrue" class="radioButton">Teacher</label>
+        <input type="radio" id="isAdminFalse" name='isAdmin' value='false' checked />
+        <label for="isAdminFalse" class="radioButton">Student</label>
 
-      <button class="formButton" type='submit'><b>Sign up</b></button>
-
-    </fieldset>
-  </form>
+        <button class="formButton" type='submit'><b>Sign up</b></button>
+      </fieldset>
+    </form>
+  </main>
 
   <!--To go to login page-->
   <section role="banner">
@@ -61,9 +60,3 @@
 </body>
 
 </html>
-
-<!--Need
-1. Head
-2. section roles
-3. aria
-4. seo-->
